@@ -1,0 +1,14 @@
+annotations:
+  artifacthub.io/changes: |
+    - "[Added]: Support high availability (HA) mode for controller with multiple replicas"
+apiVersion: v2
+appVersion: v1.1.0
+description: A Helm chart for Argo Rollouts
+home: https://github.com/argoproj/argo-helm
+icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+maintainers:
+- name: alexmt
+- name: dthomson25
+- name: jessesuen
+name: argo-rollouts
+version: 2.7.0

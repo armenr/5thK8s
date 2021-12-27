@@ -1,0 +1,19 @@
+{
+    "recommendations": [
+      "aaron-bond.better-comments",
+      "editorconfig.editorconfig",
+      "inercia.vscode-k3d",
+      "ipedrazas.kubernetes-snippets",
+      "jkiviluoto.tws",
+      "lunuan.kubernetes-templates",
+      "ms-kubernetes-tools.vscode-kubernetes-tools",
+      "redhat.ansible",
+      "redhat.vscode-yaml",
+      "sandipchitale.vscode-kubewatch",
+      "zainchen.json",
+      "mohsen1.prettify-json",
+      "pascalreitermann93.vscode-yaml-sort",
+      "arjun.swagger-viewer",
+      "shd101wyy.markdown-preview-enhanced"
+    ]
+}

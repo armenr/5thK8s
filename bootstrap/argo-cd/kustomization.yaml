@@ -1,0 +1,63 @@
+# NOTE: SRC -> https://raw.githubusercontent.com/argoproj-labs/argocd-autopilot/main/manifests/base/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+resources:
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.2.0/manifests/install.yaml
+  - https://raw.githubusercontent.com/argoproj-labs/applicationset/v0.2.0/manifests/install.yaml
+  - ingress.yaml
+
+patchesStrategicMerge:
+  - service.yaml
+
+configMapGenerator:
+  - name: argocd-cm
+    behavior: merge
+    literals:
+    - |
+      repository.credentials=- passwordSecret:
+          key: git_token
+          name: autopilot-secret
+        url: https://github.com/
+        usernameSecret:
+          key: git_username
+          name: autopilot-secret
+
+  # Reconciliation timeouts
+  - name: argocd-cm
+    behavior: merge
+    literals:
+      - "timeout.reconciliation=15s"
+
+  # This is only good for local setups.
+  - name: argocd-cmd-params-cm
+    behavior: merge
+    literals:
+      - "server.disable.auth=true"    # TODO: This is bad, must figure this out...
+      - "server.insecure=true"
+      - "server.basehref=/argocd"
+      - "server.rootpath=/argocd"
+      - "server.staticassets=/shared/app"
+      # - "server.ingress.hosts=kubernetes.docker.internal"
+
+patches:
+  # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRoleBinding
+    patch: |-
+      - op: replace
+        path: /subjects/0/namespace
+        value: default
+
+  # reconfigure argo to expose 7070
+  # - target:
+  #     name: argocd-server
+  #     version: v1
+  #     kind: Service
+  #   patch: |-
+  #     - op: replace
+  #       path: /spec/ports/0/port
+  #       value: 7070
+

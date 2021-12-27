@@ -1,0 +1,103 @@
+apiVersion: k3d.io/v1alpha3
+kind: Simple
+# servers: 2
+# agents: 2
+image: rancher/k3s:v1.21.7-k3s1
+kubeAPI:
+  host: "kubernetes.docker.internal"
+  hostIP: "127.0.0.1"
+  hostPort: "6445"
+options:
+  k3d:
+    wait: true
+    disableLoadbalancer: false
+  k3s:
+    extraArgs:
+      - arg: --tls-san=kube.armenr.ngrok.io
+        nodeFilters:
+          - server:*
+      # - arg: --no-deploy=traefik
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
+ports:
+  - port: 80:80         # translates to `--port 'host-port:loadbalanced-port@loadbalancer'`
+    nodeFilters:        # example: 8080:80@loadbalancer --> navigate to http(s)://kubernetes.docker.internal:8080
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
+  - port: 8080:8008
+    nodeFilters:
+      - loadbalancer
+
+
+
+###################### GRAVEYARD #######################
+
+# volumes:
+#   - volume: ~/k3d_volume:/opt
+#     nodeFilters:
+#       - server:*
+#       - agent:*
+
+### GRAVEYARD
+# kubeAPI: # same as `--api-port myhost.my.domain:6445` (where the name would resolve to 127.0.0.1)
+  # host: "kubernetes.docker.internal" # important for the `server` setting in the kubeconfig
+  # hostIP: "localhost" # where the Kubernetes API will be listening on
+  # hostPort: "6445" # where the Kubernetes API listening port will be mapped to on your host system
+
+
+# options:
+#   k3s:
+#     extraServerArgs:
+#     - --no-deploy=traefik
+
+
+# kubectl -n dynatrace create secret generic dynakube --from-literal="apiToken=dt0c01.6VPCBNE6MAHSAC5DX67GLOVD.O4WQ3NTSLTUULLRZ4RFUHSEPDZ5N4ZABYEPM5L4YBEKN5GMZDXBOLP3TPGUIUC5B" --from-literal="paasToken=dt0c01.BMNEEHUGQK6CR4BZLCWPIIZF.7XNJIKH63E5ZCCG4SIO3RW7HJUSNSWMZIJKOQP3VVOP35MMYRM6SP4OOWEVB54RN"
+
+
+      # - arg: --disable=servicelb
+      #   nodeFilters:
+      #     - server:*
+      # - arg: --disable=traefik
+      #   nodeFilters:
+      #     - server:*
+
+# ports:
+#   - port: 8080:80
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 443:443
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 8088:8088
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 3000:3000
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 5672:5672     # RabbitMQ AMQP port
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 15672:15672   # RabbitMQ Management interface
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 6379:6379     # redis-cli -h redis-sentinel -p 6379 # Read only operations
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 26379:26379   # redis-cli -h redis-sentinel -p 26379 # Sentinel access
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 11211:11211   # redis-cli -h redis-sentinel -p 26379 # Sentinel access
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 9200:9200   # elasticsearch
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 3306:3306   # mariadb
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 9000:9000   # traefik-dash
+#     nodeFilters:
+#       - loadbalancer

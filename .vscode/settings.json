@@ -1,0 +1,19 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "editor.fontFamily": "'Cascadia Code'",
+    "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
+    "terminal.integrated.shell.osx": "/bin/zsh",
+    "editor.fontSize": 12.8,
+    "terminal.integrated.fontSize": 14,
+    "files.exclude": {
+      "**/.git": true,
+
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+  },
+  "files.associations": {
+    "*.yaml.default": "yaml",
+    "*.yaml.example": "yaml",
+    "*.yaml.generated": "yaml",
+    }
+}

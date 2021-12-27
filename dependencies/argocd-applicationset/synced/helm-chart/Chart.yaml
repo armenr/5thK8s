@@ -1,0 +1,17 @@
+annotations:
+  artifacthub.io/changes: |
+    - "[Added]: Add resources metrics-service and servicemonitor, not enabled by default."
+apiVersion: v2
+appVersion: v0.2.0
+description: A Helm chart for installing ArgoCD ApplicationSet
+home: https://github.com/argoproj/argo-helm
+icon: https://argocd-applicationset.readthedocs.io/en/stable/assets/logo.png
+keywords:
+- argoproj
+- appset
+- gitops
+maintainers:
+- name: maruina
+name: argocd-applicationset
+type: application
+version: 1.7.0

@@ -1,0 +1,20 @@
+annotations:
+  artifacthub.io/changes: |
+    - "[Changed]: Update to Argo Events v1.5.0"
+apiVersion: v2
+appVersion: v1.5.0
+description: A Helm chart to install Argo-Events in k8s Cluster
+home: https://github.com/argoproj/argo-helm
+icon: https://argoproj.github.io/argo-events/assets/logo.png
+keywords:
+- argo-events
+- sensor-controller
+- eventsource-controller
+- eventbus-controller
+maintainers:
+- name: VaibhavPage
+- name: whynowy
+name: argo-events
+sources:
+- https://github.com/argoproj/argo-events
+version: 1.8.0

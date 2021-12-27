@@ -1,0 +1,523 @@
+set -o pipefail
+
+PATCH_DIR="dependencies/patches"
+HELM_VALUES_DIR="dependencies/helm-chart-values"
+SYNCED_CHARTS_DIR="dependencies/synced/helm-charts"
+GENERATED_CHARTS_DIR="dependencies/generated"
+
+
+function kustomizeIt {
+  local HELM_CHART_NAMESPACE=$1
+  local HELM_CHART_NAME=$2
+
+  kustomize build \
+    --enable-helm \
+    --helm-command \
+        helm template \
+          --release-name $HELM_CHART_NAME \
+          --include-crds \
+          --namespace $HELM_CHART_NAMESPACE \
+          --values $HELM_VALUES_DIR/$HELM_CHART_NAME.yaml \
+          $SYNCED_CHARTS_DIR/$HELM_CHART_NAME
+}
+
+prepend()
+{
+  array=("$@")
+  len=${#array[@]}
+  file=${array[$len-1]}
+  text=$2
+
+  printf '%s\n' 0a "$text" . w | ed -s "$file"
+}
+
+function create_local_cluster()
+{
+  k3d cluster create local-$1 --config ./assets/k3d_local.yaml
+}
+
+function squash_all()
+{
+  echo -n "!!! This is a DESTRUCTIVE ACTION: Do you wish to merge/squash all prior commits (y/n)? "
+  read answer
+
+  if [ "$answer" != "${answer#[Yy]}" ]; # this grammar (the #[] operator) means that the variable $answer where any Y or y in 1st position will be dropped if they exist.
+  then
+      git reset $(git commit-tree HEAD^{tree} -m "Initial commit...")
+  else
+      echo No
+  fi
+
+
+}
+
+function bootstrap_cluster()
+{
+  kapp_deploy_helm argocd argocd --create-namespace
+}
+
+function check_namespace_exists()
+{
+  if [  -z "$1" ]; then
+    echo "No namespace provided...aborting"
+    kill -INT $$
+  fi
+
+  local EXISTING_NAMESPACES=$(kubectl get namespaces --show-labels | sed 1,1d | cut -d ' ' -f1)
+  local NAMESPACE_DOES_EXIST=$(echo $EXISTING_NAMESPACES | grep -w "^$1$" -)
+
+  if [[ ! $NAMESPACE_DOES_EXIST ]]; then
+    return 1
+
+    if [[ ! $2 == "--create-namespace" ]]; then
+      echo "--create-namespace flag not set, aborting..."
+      kill -INT $$
+    fi
+  fi
+}
+
+function create_namespace()
+{
+  echo "|> "
+  kubectl create ns $1
+}
+
+function generate_helm_manifest()
+{
+  local HELM_CHART_NAMESPACE=$1
+  local HELM_CHART_NAME=$2
+
+  helm template \
+    --release-name $HELM_CHART_NAME \
+    --include-crds \
+    --namespace $HELM_CHART_NAMESPACE \
+    --post-renderer ./helm-post-renderer.sh \
+    --values $HELM_VALUES_DIR/$HELM_CHART_NAME.yaml \
+    $SYNCED_CHARTS_DIR/$HELM_CHART_NAME
+}
+
+function patch_helm_kustomize()
+{
+  local HELM_CHART_NAMESPACE=$1
+  local HELM_CHART_NAME=$2
+
+  local REL_HELM_VALUES_DIR="../../helm-chart-values/"
+  local REL_SYNCED_CHARTS_DIR="../../synced/helm-charts/"
+
+  if [ -d "$PATCH_DIR/$HELM_CHART_NAME" ];
+  then
+
+    cd $PATCH_DIR/$HELM_CHART_NAME
+    mkdir charts
+    cp -r $REL_SYNCED_CHARTS_DIR .
+
+    helm template \
+      --release-name $HELM_CHART_NAME \
+      --include-crds \
+      --namespace $HELM_CHART_NAMESPACE \
+      --values $REL_HELM_VALUES_DIR/$HELM_CHART_NAME.yaml \
+        $REL_SYNCED_CHARTS_DIR/$HELM_CHART_NAME \
+        2>&1 | tee $HELM_CHART_NAME-deploy.yaml
+
+    # local CURRENT_COMMIT=$(git rev-parse HEAD)
+
+    # prepend $GENERATED_CHARTS_DIR/$HELM_CHART_NAME-deploy.yaml "# $CURRENT_COMMIT"
+
+		else
+			tmp_helm_rendered=$(mktemp -u).yml
+			helmTemplate=$(</dev/stdin)
+			echo "$helmTemplate"
+	fi
+}
+
+function patch_helm_ytt()
+{
+  local HELM_CHART_NAME=$1
+
+  if [ -d "$PATCH_DIR/$1" ]; then
+			ytt \
+				-f $PATCH_DIR/$1 \
+        -f $2
+		else
+			tmp_helm_rendered=$(mktemp -u).yml
+			helmTemplate=$(</dev/stdin)
+			echo "$helmTemplate"
+	fi
+}
+
+# function generate_kustomize_patches()
+# {
+#   local HELM_CHART_NAME=$1
+
+#   if [ -d "$PATCH_DIR/$1" ]; then
+# 			ytt \
+# 				-f $PATCH_DIR/$1 \
+#         -f $2
+# 		else
+# 			tmp_helm_rendered=$(mktemp -u).yml
+# 			helmTemplate=$(</dev/stdin)
+# 			echo "$helmTemplate"
+# 	fi
+# }
+
+function deploy_kapp()
+{
+  local HELM_CHART_NAMESPACE=$1
+  local HELM_CHART_NAME=$2
+
+  kapp deploy \
+		--namespace $1 \
+		--app $2 \
+		--diff-changes \
+		--file $3 \
+    --yes
+}
+
+function kapp_deploy_helm()
+{
+  local HELM_CHART_NAMESPACE=$1
+  local HELM_CHART_NAME=$2
+  local CREATE_NAMESPACE_FLAG=${3:-false}
+
+  if [ -z "$HELM_CHART_NAMESPACE" ]; then
+    printf "\n"
+    echo "MISSING NAMESPACE ARGUMENT...ABORTING!"
+    printf "\n"
+
+  elif [ -z "$HELM_CHART_NAME" ]; then
+    printf "\n"
+    echo "MISSING CHART NAME ARGUMENT...ABORTING!"
+    printf "\n"
+  fi
+
+  if [ -z "$HELM_CHART_NAMESPACE" ] || [ -z "$HELM_CHART_NAME" ]; then
+    echo "You are missing a crucial parameter from your command..."
+    printf "\n"
+
+    echo "[Required] Target namespace:    $HELM_CHART_NAMESPACE"
+    echo "Example - 'argo' or 'kube-system (not recommended...)'"
+    printf "\n"
+
+    echo "[Required] Helm chart name:   $HELM_CHART_NAME"
+    echo "Example - 'argo-workflows'"
+    printf "\n"
+
+    echo "[Optional] Create missing namespace?:   $CREATE_NAMESPACE_FLAG"
+    echo "Example - '--create-namespace'"
+    kill -INT $$
+
+    echo "[Optional] Show changeset/diff ?    $CREATE_NAMESPACE_FLAG"
+    echo "Example - '--show-diff'"
+    kill -INT $$
+  fi
+
+  check_namespace_exists $HELM_CHART_NAMESPACE $CREATE_NAMESPACE_FLAG
+  if [ ! $? -eq 0 ];
+  then
+    if [ $CREATE_NAMESPACE_FLAG = "--create-namespace" ];
+    then
+      printf "\n"
+      echo "Create-namespace flag is set...creating namespace $HELM_CHART_NAMESPACE"
+      printf "\n"
+      create_namespace $HELM_CHART_NAMESPACE
+    else
+      printf "\n"
+      echo "  |> Namespace not found & no '--create-namespace' flag provided..."
+      echo "  |> Will not proceed !!!"
+      printf "\n"
+      kill -INT $$
+    fi
+  fi
+
+  printf "\n"
+  printf "\n|>  ######### SUMMARY #########  <|"
+  printf "\n"
+  printf "\n"
+  echo "|> Target namespace: $HELM_CHART_NAMESPACE"
+  printf "\n"
+  echo "|> Helm chart name: $HELM_CHART_NAME"
+  printf "\n"
+
+  if [ -d "./$SYNCED_CHARTS_DIR/$HELM_CHART_NAME" ]; then
+    printf "\n"
+    echo "Deplyoment in progress..."
+    printf "\n"
+
+    generate_helm_manifest \
+      "$HELM_CHART_NAMESPACE" \
+      "$HELM_CHART_NAME" \
+      2>&1 \
+    | patch_helm \
+      "$HELM_CHART_NAME" \
+      - 2>&1 \
+    | deploy_kapp \
+        "$HELM_CHART_NAMESPACE" \
+        "$HELM_CHART_NAME" \
+        -
+
+  else
+    echo "🚨⚠️  There is no synced dependency for chart: $HELM_CHART_NAME"
+    printf "\n"
+    echo "📝 👉 Add your chart through vendir, sync it, then try again..."
+    printf "\n"
+  fi
+
+  printf "\n|>  ######### ALL DONE #########  <|\n"
+}
+
+function kapp_deploy_helm_kustomize()
+{
+  local HELM_CHART_NAMESPACE=$1
+  local HELM_CHART_NAME=$2
+  local CREATE_NAMESPACE_FLAG=${3:-false}
+
+  if [ -z "$HELM_CHART_NAMESPACE" ]; then
+    printf "\n"
+    echo "MISSING NAMESPACE ARGUMENT...ABORTING!"
+    printf "\n"
+
+  elif [ -z "$HELM_CHART_NAME" ]; then
+    printf "\n"
+    echo "MISSING CHART NAME ARGUMENT...ABORTING!"
+    printf "\n"
+  fi
+
+  if [ -z "$HELM_CHART_NAMESPACE" ] || [ -z "$HELM_CHART_NAME" ]; then
+    echo "You are missing a crucial parameter from your command..."
+    printf "\n"
+
+    echo "[Required] Target namespace:    $HELM_CHART_NAMESPACE"
+    echo "Example - 'argo' or 'kube-system (not recommended...)'"
+    printf "\n"
+
+    echo "[Required] Helm chart name:   $HELM_CHART_NAME"
+    echo "Example - 'argo-workflows'"
+    printf "\n"
+
+    echo "[Optional] Create missing namespace?:   $CREATE_NAMESPACE_FLAG"
+    echo "Example - '--create-namespace'"
+    kill -INT $$
+
+    echo "[Optional] Show changeset/diff ?    $CREATE_NAMESPACE_FLAG"
+    echo "Example - '--show-diff'"
+    kill -INT $$
+  fi
+
+  check_namespace_exists $HELM_CHART_NAMESPACE $CREATE_NAMESPACE_FLAG
+  if [ ! $? -eq 0 ];
+  then
+    if [ $CREATE_NAMESPACE_FLAG = "--create-namespace" ];
+    then
+      printf "\n"
+      echo "Create-namespace flag is set...creating namespace $HELM_CHART_NAMESPACE"
+      printf "\n"
+      create_namespace $HELM_CHART_NAMESPACE
+    else
+      printf "\n"
+      echo "  |> Namespace not found & no '--create-namespace' flag provided..."
+      echo "  |> Will not proceed !!!"
+      printf "\n"
+      kill -INT $$
+    fi
+  fi
+
+  printf "\n"
+  printf "\n|>  ######### SUMMARY #########  <|"
+  printf "\n"
+  printf "\n"
+  echo "|> Target namespace: $HELM_CHART_NAMESPACE"
+  printf "\n"
+  echo "|> Helm chart name: $HELM_CHART_NAME"
+  printf "\n"
+
+  if [ -d "./$SYNCED_CHARTS_DIR/$HELM_CHART_NAME" ]; then
+    printf "\n"
+    echo "Deplyoment in progress..."
+    printf "\n"
+
+    generate_helm_manifest \
+      "$HELM_CHART_NAMESPACE" \
+      "$HELM_CHART_NAME" \
+      2>&1 \
+    | patch_helm \
+      "$HELM_CHART_NAME" \
+      - 2>&1 \
+    | deploy_kapp \
+        "$HELM_CHART_NAMESPACE" \
+        "$HELM_CHART_NAME" \
+        -
+
+  else
+    echo "🚨⚠️  There is no synced dependency for chart: $HELM_CHART_NAME"
+    printf "\n"
+    echo "📝 👉 Add your chart through vendir, sync it, then try again..."
+    printf "\n"
+  fi
+
+  printf "\n|>  ######### ALL DONE #########  <|\n"
+}
+
+
+
+############################################ GRAVEYARD ############################################
+###################################################################################################
+#
+# function kapp_deploy_kustomize()
+# {
+#   local HELM_CHART_NAMESPACE=$1
+#   local HELM_CHART_NAME=$2
+#   local CREATE_NAMESPACE_FLAG=${3:-false}
+
+#   if [ -z "$HELM_CHART_NAMESPACE" ]; then
+#     printf "\n"
+#     echo "MISSING NAMESPACE ARGUMENT...ABORTING!"
+#     printf "\n"
+
+#   elif [ -z "$HELM_CHART_NAME" ]; then
+#     printf "\n"
+#     echo "MISSING CHART NAME ARGUMENT...ABORTING!"
+#     printf "\n"
+#   fi
+
+#   if [ -z "$HELM_CHART_NAMESPACE" ] || [ -z "$HELM_CHART_NAME" ]; then
+#     echo "You are missing a crucial parameter from your command..."
+#     printf "\n"
+
+#     echo "[Required] Target namespace:    $HELM_CHART_NAMESPACE"
+#     echo "Example - 'argo' or 'kube-system (not recommended...)'"
+#     printf "\n"
+
+#     echo "[Required] Helm chart name:   $HELM_CHART_NAME"
+#     echo "Example - 'argo-workflows'"
+#     printf "\n"
+
+#     echo "[Optional] Create missing namespace?:   $CREATE_NAMESPACE_FLAG"
+#     echo "Example - '--create-namespace'"
+#     kill -INT $$
+
+#     echo "[Optional] Show changeset/diff ?    $CREATE_NAMESPACE_FLAG"
+#     echo "Example - '--show-diff'"
+#     kill -INT $$
+#   fi
+
+#   check_namespace_exists $HELM_CHART_NAMESPACE $CREATE_NAMESPACE_FLAG
+#   if [ ! $? -eq 0 ];
+#   then
+#     if [ $CREATE_NAMESPACE_FLAG = "--create-namespace" ];
+#     then
+#       printf "\n"
+#       echo "Create-namespace flag is set...creating namespace $HELM_CHART_NAMESPACE"
+#       printf "\n"
+#       create_namespace $HELM_CHART_NAMESPACE
+#     else
+#       printf "\n"
+#       echo "  |> Namespace not found & no '--create-namespace' flag provided..."
+#       echo "  |> Will not proceed !!!"
+#       printf "\n"
+#       kill -INT $$
+#     fi
+#   fi
+
+#   printf "\n"
+#   printf "\n|>  ######### SUMMARY #########  <|"
+#   printf "\n"
+#   printf "\n"
+#   echo "|> Target namespace: $HELM_CHART_NAMESPACE"
+#   printf "\n"
+#   echo "|> Helm chart name: $HELM_CHART_NAME"
+#   printf "\n"
+
+#   if [ -d "./$SYNCED_CHARTS_DIR/$HELM_CHART_NAME" ]; then
+#     printf "\n"
+#     echo "Deplyoment in progress..."
+#     printf "\n"
+
+#     generate_helm_manifest \
+#       "$HELM_CHART_NAMESPACE" \
+#       "$HELM_CHART_NAME" \
+#       2>&1 \
+#     | patch_helm \
+#       "$HELM_CHART_NAME" \
+#       - 2>&1 \
+#     | deploy_kapp \
+#         "$HELM_CHART_NAMESPACE" \
+#         "$HELM_CHART_NAME" \
+#         -
+
+#   else
+#     echo "🚨⚠️  There is no synced dependency for chart: $HELM_CHART_NAME"
+#     printf "\n"
+#     echo "📝 👉 Add your chart through vendir, sync it, then try again..."
+#     printf "\n"
+#   fi
+
+#   printf "\n|>  ######### ALL DONE #########  <|\n"
+# }
+
+
+
+# function spinner-new() {
+#   # Execute your stuffs in a background job
+# # eval "${@:-sleep 1}" &
+
+# # Point fd#3 to fd#1 (Save it for later use), then point fd#1 to fd#2
+# # PD: This does not interfere with the variable for the PID i.e. $!
+# exec 3>&1 >&2
+
+# PID=$!
+# SPINNER_PARTS="/-\|"
+# ACC=1
+
+# printf " "
+# while ps a | awk '{print $1}' | grep -q "${PID}"; do
+#     printf "\b%s" "${SPINNER_PARTS:ACC++%${#SPINNER_PARTS}:1}"
+#     sleep .15
+# done
+# printf "\b"
+
+# exec >&3 3>&-
+# }
+
+
+    # && patch_helm "$HELM_CHART_NAME" $(cat "$TMP_RENDERED_HELM") > "$TMP_patches_HELM"
+    # && deploy_kapp \
+    #     "$HELM_CHART_NAMESPACE" \
+    #     "$HELM_CHART_NAME" \
+    #     $(cat "$TMP_patches_HELM")
+
+
+    # tmp_patches_manifest=$(mktemp -u).yaml
+
+    # generate_helm_manifest $HELM_CHART_NAMESPACE $HELM_CHART_NAME
+
+
+      # && cat "$tmp_rendered_helm_manifest" && echo "I DID STEP 1" \
+      #   | patch_helm $HELM_CHART_NAME - \
+      #   > "$tmp_patches_manifest" && echo "made it to step 2" \
+      # && cat "$tmp_patches_manifest" \
+      #   | deploy_kapp $HELM_CHART_NAMESPACE $HELM_CHART_NAME -
+
+    # generate_helm_manifest \
+    #   $HELM_CHART_NAMESPACE $HELM_CHART_NAME >/dev/null > \
+    #   >( patch_helm $HELM_CHART_NAME - >/dev/null ) > \
+    #   >( deploy_kapp $HELM_CHART_NAMESPACE $HELM_CHART_NAME - )
+
+
+    #   deploy_kapp $HELM_CHART_NAMESPACE $HELM_CHART_NAME \
+    #     <(( \
+    #       patch_helm $HELM_CHART_NAME) \
+    #     <( \
+    #       patch_helm $HELM_CHART_NAME \
+    #     ))
+
+    #   tmp_rendered_helm_manifest=$(mktemp -u).yaml
+    #   tmp_patches_manifest=$(mktemp -u).yaml
+
+
+
+
+
+        # tmp_rendered_helm_manifest=$(mktemp .yaml)
+        # generate_helm_manifest $HELM_CHART_NAMESPACE $HELM_CHART_NAME > dev/null > "$tmp_rendered_helm_manifest"
+
+

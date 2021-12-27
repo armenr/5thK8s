@@ -1,0 +1,95 @@
+config:
+  secret:
+    argocdServerAdminPassword: BLEEGASTAN123
+
+server:
+  insecure: true
+  ## This is very important
+  ## for non-standard "/someURL" configs
+  extraArgs:
+    - --basehref
+    - /argocd
+  ingress:
+    enabled: true
+    hostname: kubernetes.docker.internal
+    ## This is very important
+    ## for non-standard "/someURL" configs
+    path: /argocd
+    tls: false
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+      traefik.ingress.kubernetes.io/router.middlewares: argocd-argocd-prefix@kubernetescrd
+  service:
+    ports:
+      http: 8081
+      https: 443
+
+redis:
+  enabled: true
+  # metrics:
+  #   enabled: true
+  #   serviceMonitor:
+  #     enabled: true
+  #     namespace: "monitoring"
+
+  master:
+    persistence:
+      enabled: false
+
+  replica:
+    replicaCount: 1
+    persistence:
+      enabled: false
+
+
+
+#TODO: Worth Looking into this -->
+# https://ik.am/entries/659/en
+
+#   ingress:
+#     enabled: true
+#     hostname: ${ARGO_CD_HOSTNAME}
+#     tls: false
+#     selfSigned: false
+#     extraTls:
+#     - hosts:
+#       - ${ARGO_CD_HOSTNAME}
+#       secretName: ${ARGO_CD_HOSTNAME}-tls
+#     secrets:
+#     - name: $(kubectl get secret -n argo-cd --field-selector type=kubernetes.io/tls -o template='{{(index (index (index .items 0) "metadata") "name")}}')
+#       certificate: |
+# $(kubectl get secret -n argo-cd --field-selector type=kubernetes.io/tls -o template='{{index (index (index .items 0) "data") "tls.crt" | base64decode}}' | sed 's/^/        /g')
+#       key: |
+# $(kubectl get secret -n argo-cd --field-selector type=kubernetes.io/tls -o template='{{index (index (index .items 0) "data") "tls.key" | base64decode}}' | sed 's/^/        /g')
+#   ingressGrpc:
+#     enabled: true
+#     hostname: ${ARGO_CD_GRPC_HOSTNAME}
+#     tls: true
+#     selfSigned: false
+#     secrets:
+#     - name: $(kubectl get secret -n argo-cd --field-selector type=kubernetes.io/tls -o template='{{(index (index (index .items 1) "metadata") "name")}}')
+#       certificate: |
+# $(kubectl get secret -n argo-cd --field-selector type=kubernetes.io/tls -o template='{{index (index (index .items 1) "data") "tls.crt" | base64decode}}' | sed 's/^/        /g')
+#       key: |
+# $(kubectl get secret -n argo-cd --field-selector type=kubernetes.io/tls -o template='{{index (index (index .items 1) "data") "tls.key" | base64decode}}' | sed 's/^/        /g')
+#   insecure: true
+#   config: |
+#     configManagementPlugins: |-
+#       - name: bash
+#         generate:
+#           command:
+#           - /bin/bash
+#           args:
+#           - -ce
+#           - ./generate
+# redis:
+#   replica:
+#     replicaCount: 1
+#   auth:
+#     password: $(kubectl get secret -n argo-cd argo-cd-redis -otemplate='{{index .data "redis-password" | base64decode}}')
+# config:
+#   secret:
+#     argocdServerAdminPassword: $(kubectl get secret -n argo-cd argocd-secret -otemplate='{{index .data "clearPassword" | base64decode}}')
+#     argocdServerAdminPasswordMtime: $(kubectl get secret -n argo-cd argocd-secret -otemplate='{{index .data "admin.passwordMtime" | base64decode}}')
+#     extra:
+#       server.secretkey: $(kubectl get secret -n argo-cd argocd-secret -otemplate='{{index .data "server.secretkey" | base64decode}}')

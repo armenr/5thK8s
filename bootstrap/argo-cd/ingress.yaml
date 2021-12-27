@@ -1,0 +1,153 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: argo-stack-cd
+  namespace: argocd
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /argocd
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
+
+# apiVersion: networking.k8s.io/v1beta1
+# kind: Ingress
+# metadata:
+#   name: argo-server
+#   annotations:
+#     ingress.kubernetes.io/rewrite-target: /$2
+#     ingress.kubernetes.io/protocol: https # Traefik
+#     nginx.ingress.kubernetes.io/backend-protocol: https # ingress-nginx
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#           - backend:
+#               serviceName: argo-server
+#               servicePort: 2746
+#             path: /argo(/|$)(.*)
+
+
+# kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: argo-stack-secure
+#   namespace: argocd
+#   annotations:
+#     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+
+# spec:
+#   rules:
+#   - host: https-example.foo.
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: service1
+#             port:
+#               number: 80
+#     - https:
+#         paths:
+#           - path: /argocd
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: argocd-server
+#                 port:
+#                   number: 443
+#     - https:
+#         paths:
+#           - path: /worflows
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: argo-server
+#                 port:
+#                   number: 2746
+
+# kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: argo-stack
+#   namespace: argocd
+#   annotations:
+#     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#           - path: /worklflows
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: argo-workflows
+#                 port:
+#                   number:
+
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: argocd-server
+#   namespace: argocd
+# spec:
+#   addPrefix:
+#     prefix: /argocd
+#   entryPoints:
+#     - websecure
+#   routes:
+#     - kind: Rule
+#       match: Host(`kubernetes.docker.internal`) && PathPrefix(`/argocd`)
+#       priority: 10
+#       services:
+#         - name: argocd-server
+#           port: 7070
+#     - kind: Rule
+#       match: Host(`kubernetes.docker.internal`) && Headers(`Content-Type`, `application/grpc`)  # && PathPrefix(`/argocd`)
+#       priority: 11
+#       services:
+#         - name: argocd-server
+#           port: 7070
+#           scheme: h2c
+#   tls:
+#     certResolver: default
+#     options: {}
+
+# ---
+
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: argo-workflows
+#   namespace: argo
+# spec:
+#   addPrefix:
+#     prefix: /workflows
+#   entryPoints:
+#     - websecure
+#   routes:
+#     - kind: Rule
+#       match: Host(`kubernetes.docker.internal`) && PathPrefix(`/workflows`)
+#       priority: 10
+#       services:
+#         - name: argocd-server
+#           port: 2746
+#     - kind: Rule
+#       match: Host(`kubernetes.docker.internal`) && Headers(`Content-Type`, `application/grpc`)  # && PathPrefix(`/argocd`)
+#       priority: 11
+#       services:
+#         - name: argocd-server
+#           port: 2746
+#           scheme: h2c
+#   tls:
+#     certResolver: default
+#     options: {}
