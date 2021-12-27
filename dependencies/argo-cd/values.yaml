@@ -3,6 +3,14 @@ config:
     argocdServerAdminPassword: BLEEGASTAN123
 
 server:
+  extraVolumes:
+    - name: tls-certs
+      configMap:
+        name: argocd-tls-certs-cm
+  extraVolumeMounts:
+    - mountPath: /app/config/tls
+      name: tls-certs
+
   insecure: true
   ## This is very important
   ## for non-standard "/someURL" configs
@@ -65,8 +73,6 @@ repoServer:
           name: plugin-cmp-kustomize-helm
         - mountPath: /tmp
           name: tmp
-
-
 
 
 #   extraVolumeMounts:

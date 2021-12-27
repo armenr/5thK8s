@@ -5,6 +5,8 @@ resources:
   - helm.yaml.generated
   - patches/cmp-plugin.yaml
   - patches/traefik-middleware.yaml
+  - patches/config-map-tls.yaml
+
   # - synced/extension-ui-rollouts/manifests/install.yaml
   # - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/ha/install.yaml
   # - https://raw.githubusercontent.com/argoproj-labs/applicationset/v0.2.0/manifests/install.yaml
