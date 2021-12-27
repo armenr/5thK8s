@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: plugin-cmp-kustomize-helm
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: plugin-cmp-kustomize-helm
+    spec:
+      version: v1.0
+      generate:
+        command: [sh, -c]
+        args: ["helm template --release-name release-name . > all.yaml && kustomize build"]
+      discover:
+        fileName: "./subdir/s*.yaml"
+      allowConcurrency: true
+
+
+  # configManagementPlugins: |
+  #   - name: kustomized-helm
+  #     init:
+  #       command: ["/bin/sh", "-c"]
+  #       args: ["helm dependency build"]
+  #     generate:
+  #     # discover:
+  #     #   fileName: "./subdir/s*.yaml"
+  #     #lockRepo: false
+
+

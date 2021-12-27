@@ -3,5 +3,5 @@
 **/*/*.log
 **/**/.DS_STORE
 **/**/token.yaml
-dependencies/**/synthesized.yaml
+dependencies/**/*.yaml.generated
 **/.vendir-tmp
