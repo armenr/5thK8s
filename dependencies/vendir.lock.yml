@@ -49,7 +49,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 6.2.6
-      version: 15.6.8
+      version: 15.6.9
     path: helm-chart
   path: redis/synced
 - contents:
