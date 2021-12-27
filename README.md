@@ -54,6 +54,7 @@ brew install octant
 brew install boz/repo/kail
 brew install --cask lens
 brew install yq jq ytt fx
+brew install chart-testing
 ```
 
 Install this - thank me later :)
