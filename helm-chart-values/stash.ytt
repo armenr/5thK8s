@@ -1,3 +1,0 @@
-
-    ######@yaml/text-templated-strings
-    # traefik.ingress.kubernetes.io/router.middlewares: "(@= namespace@)-(@= app_name@)-prefix@kubernetescrd"
