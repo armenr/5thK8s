@@ -153,3 +153,13 @@ directories:
       repository:
         url: https://kubecost.github.io/cost-analyzer/
     # version: 1.6.1
+
+# sealed-secrets
+- path: sealed-secrets/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: sealed-secrets
+      repository:
+        url: https://bitnami-labs.github.io/sealed-secrets
+    # version: 1.6.1

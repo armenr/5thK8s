@@ -88,4 +88,10 @@ directories:
       version: 1.88.1
     path: helm-chart
   path: cost-analyzer/synced
+- contents:
+  - helmChart:
+      appVersion: v0.17.1
+      version: 2.0.2
+    path: helm-chart
+  path: sealed-secrets/synced
 kind: LockConfig
