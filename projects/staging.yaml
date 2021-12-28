@@ -36,7 +36,7 @@ spec:
   generators:
   - git:
       files:
-      - path: apps/**/staging/config.json
+      - path: applications/**/staging/config.json
       repoURL: https://github.com/armenr/argocd-autopilot.git
       requeueAfterSeconds: 20
       revision: ""
@@ -49,7 +49,7 @@ spec:
             repoURL: ""
   - git:
       files:
-      - path: apps/**/staging/config_dir.json
+      - path: applications/**/staging/config_dir.json
       repoURL: https://github.com/armenr/argocd-autopilot.git
       requeueAfterSeconds: 20
       revision: ""
