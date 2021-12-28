@@ -1,3 +1,6 @@
 # TODO
 
 Here be TODOs
+
+
+[-] PUT FINALIZERS BACK ON BOOTSTRAP RESOURCES (argo, root, etc)
