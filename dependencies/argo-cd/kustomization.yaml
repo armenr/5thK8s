@@ -1,12 +1,32 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: argocd
+
+helmGlobals:
+  chartHome: synced/
+
+helmCharts:
+- name: helm-chart
+  releaseName: argo-cd
+  namespace: argocd
+  includeCRDs: true
+  valuesFile: values.yaml
+
 resources:
-  - helm.yaml.generated
   - patches/cmp-plugin.yaml
   - patches/traefik-middleware.yaml
   - patches/config-map-tls.yaml
+  - patches/config-map-kustomize.yaml
 
+configMapGenerator:
+  #Reconciliation timeouts
+  - name: argocd-cm
+    behavior: merge
+    literals:
+      - "timeout.reconciliation=15s"
+
+
+# TODO:
+#resources:
   # - synced/extension-ui-rollouts/manifests/install.yaml
   # - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/ha/install.yaml
   # - https://raw.githubusercontent.com/argoproj-labs/applicationset/v0.2.0/manifests/install.yaml
@@ -15,13 +35,7 @@ resources:
 # extensions controller component
 # - https://github.com/argoproj-labs/argocd-extensions/manifests
 
-configMapGenerator:
-  #Reconciliation timeouts
-  - name: argocd-cm
-    behavior: merge
-    namespace: argocd
-    literals:
-      - "timeout.reconciliation=15s"
+
   # - name: argocd-cm
   #   behavior: merge
   #   literals:
