@@ -3,7 +3,6 @@ kind: Application
 metadata:
   creationTimestamp: null
   labels:
-    app.kubernetes.io/managed-by: argocd-autopilot
     app.kubernetes.io/name: argo-cd
   name: argo-cd
   namespace: argocd
@@ -18,8 +17,8 @@ spec:
     kind: Application
   project: default
   source:
-    path: bootstrap/argo-cd
-    repoURL: https://github.com/armenr/argocd-autopilot.git
+    path: dependencies/argo-cd
+    repoURL: https://github.com/armenr/5thK8s.git
   syncPolicy:
     automated:
       allowEmpty: true

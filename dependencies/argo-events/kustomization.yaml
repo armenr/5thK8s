@@ -1,1 +1,12 @@
-# I'll be a real file someday
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: synced/
+
+helmCharts:
+- name: helm-chart
+  releaseName: argo-events
+  namespace: argo-events
+  includeCRDs: true
+  valuesFile: values.yaml

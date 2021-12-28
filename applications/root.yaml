@@ -21,7 +21,7 @@ spec:
   project: default
   source:
     path: projects
-    repoURL: https://github.com/armenr/argocd-autopilot.git
+    repoURL: https://github.com/armenr/5thK8s.git
   syncPolicy:
     automated:
       allowEmpty: true

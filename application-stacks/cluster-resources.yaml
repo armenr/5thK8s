@@ -10,8 +10,8 @@ spec:
   generators:
   - git:
       files:
-      - path: bootstrap/cluster-resources/*.json
-      repoURL: https://github.com/armenr/argocd-autopilot.git
+      - path: dependencies/cluster-resources/*.json
+      repoURL: https://github.com/armenr/5thK8s.git
       requeueAfterSeconds: 20
       revision: ""
       template:
@@ -26,7 +26,6 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/managed-by: argocd-autopilot
         app.kubernetes.io/name: cluster-resources-{{name}}
       name: cluster-resources-{{name}}
       namespace: argocd
@@ -40,8 +39,8 @@ spec:
         kind: Application
       project: default
       source:
-        path: bootstrap/cluster-resources/{{name}}
-        repoURL: https://github.com/armenr/argocd-autopilot.git
+        path: dependencies/cluster-resources/{{name}}
+        repoURL: https://github.com/armenr/5thK8s.git
       syncPolicy:
         automated:
           allowEmpty: true
