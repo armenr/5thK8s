@@ -1,6 +1,6 @@
 # Bootstrap
 
-This dependency bootstraps our argo-cd deployment.
+This dependency bootstraps our argo-cd deployment. It mimics the same bootstrap approach that `argocd-autopilot` takes...just with slight changes and adaptation so that it fits into our broader workflow.
 
 Whie it all seems a bit recursive and self-referencial, this is worthwile, because the cluster self-manages.
 
