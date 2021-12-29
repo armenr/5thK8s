@@ -8,25 +8,25 @@ metadata:
   name: argo-cd
   namespace: argocd
 spec:
-  destination:
-    namespace: argocd
-    server: https://kubernetes.default.svc
-  ignoreDifferences:
-  - group: argoproj.io
-    jsonPointers:
-    - /status
-    kind: Application
   project: default
   source:
-    path: dependencies/autopilot-bootstrap/bootstrap/argo-cd
-    repoURL: https://github.com/armenr/5thK8s.git
+    repoURL: 'https://github.com/armenr/5thK8s.git'
+    path: dependencies/bootstrap
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
   syncPolicy:
     automated:
-      allowEmpty: true
       prune: true
       selfHeal: true
+      allowEmpty: true
     syncOptions:
-    - allowEmpty=true
+      - allowEmpty=true
+  ignoreDifferences:
+    - group: argoproj.io
+      kind: Application
+      jsonPointers:
+        - /status
 status:
   health: {}
   summary: {}
@@ -36,3 +36,5 @@ status:
       source:
         repoURL: ""
     status: ""
+
+

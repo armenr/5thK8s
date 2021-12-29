@@ -20,7 +20,7 @@ spec:
     kind: Application
   project: default
   source:
-    path: dependencies/autopilot-bootstrap/projects
+    path: projects
     repoURL: https://github.com/armenr/5thK8s.git
   syncPolicy:
     automated:

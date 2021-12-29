@@ -10,7 +10,7 @@ spec:
   generators:
   - git:
       files:
-      - path: dependencies/autopilot-bootstrap/bootstrap/cluster-resources/*.json
+      - path: dependencies/bootstrap/cluster-resources/*.json
       repoURL: https://github.com/armenr/5thK8s.git
       requeueAfterSeconds: 20
       revision: ""
@@ -40,7 +40,7 @@ spec:
         kind: Application
       project: default
       source:
-        path: dependencies/autopilot-bootstrap/bootstrap/cluster-resources/{{name}}
+        path: dependencies/bootstrap/cluster-resources/{{name}}
         repoURL: https://github.com/armenr/5thK8s.git
       syncPolicy:
         automated:
