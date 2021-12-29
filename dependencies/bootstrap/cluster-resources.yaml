@@ -3,7 +3,7 @@ kind: ApplicationSet
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
-  creationTimestamp: null
+  creationTimestamp: ''
   name: cluster-resources
   namespace: argocd
 spec:
