@@ -14,6 +14,12 @@ directories:
       version: 2.0.19
     path: helm-chart
   - git:
+      commitTitle: Bump version to 2.2.1
+      sha: 122ecefc3abfe8b691a08d9f3cecf9a170cc8c37
+      tags:
+      - stable
+    path: vendor-manifests
+  - git:
       commitTitle: 'refactor: update argo-ui version...'
       sha: c756b99e0c2ca43669c52835d9f948b116870330
     path: extension-ui-rollouts

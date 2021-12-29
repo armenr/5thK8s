@@ -40,7 +40,7 @@ directories:
       ref: stable
     includePaths:
     - manifests/**/*
-
+    newRootPath: manifests
 
   - path: extension-ui-rollouts
     git:

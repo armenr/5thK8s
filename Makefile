@@ -29,17 +29,19 @@ cluster:
 
 bootstrap-argocd:
 	kubectl create namespace argocd
+	kubectl -n argocd create secret generic \
+		autopilot-secret \
+		--from-literal git_username=$GITHUB_USER \
+		--from-literal git-token=$GIT_TOKEN
 	kustomize build \
-		--enable-helm \
 		dependencies/argo-cd \
 		> dependencies/bootstrap/argo-cd/argo-cd.base.yaml
-	kustomize build \
-		--enable-helm dependencies/argocd-applicationset \
+	kustomize build --enable-helm \
+		dependencies/argocd-applicationset \
 		> dependencies/bootstrap/argo-cd/argocd-applicationsets.base.yaml
 	kustomize build \
 		dependencies/bootstrap/argo-cd \
 		| kubectl apply -n argocd -f -
-	kubectl -n argocd create secret generic autopilot-secret --from-literal git_username=$GITHUB_USER --from-literal git-token=$GIT_TOKEN
 
 # destroy all the things
 destroy-cluster:

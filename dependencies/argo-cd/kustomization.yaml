@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-# namespace: argocd
+namespace: argocd
 
 helmGlobals:
   chartHome: synced/
@@ -19,6 +19,7 @@ generators:
   - generators/configmap-argocd-cm.yaml
 
 resources:
+  - synced/vendor-manifests/cluster-rbac
   - patches/traefik-middleware.yaml
   - patches/config-map-tls.yaml
   - patches/cm-cmp-plugin.yaml

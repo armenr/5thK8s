@@ -1,7 +1,7 @@
 # FROM: https://github.com/argoproj-labs/argocd-autopilot/blob/main/manifests/base/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: argocd
+# namespace: argocd
 
 # ArgoCD + ApplicationSets are required together
 ## To update these, BUILD THEM FROM OUR OWN DEPENDENCIES
@@ -27,13 +27,13 @@ configMapGenerator:
           name: autopilot-secret
 
 # More magical shit
-patches:
-  # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
-  - target:
-      group: rbac.authorization.k8s.io
-      version: v1
-      kind: ClusterRoleBinding
-    patch: |-
-      - op: replace
-        path: /subjects/0/namespace
-        value: default
+# patches:
+#   # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
+#   - target:
+#       group: rbac.authorization.k8s.io
+#       version: v1
+#       kind: ClusterRoleBinding
+#     patch: |-
+#       - op: replace
+#         path: /subjects/0/namespace
+#         value: default

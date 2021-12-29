@@ -10,7 +10,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/armenr/5thK8s.git'
+    repoURL: https://github.com/armenr/5thK8s.git
     path: dependencies/bootstrap
   destination:
     server: 'https://kubernetes.default.svc'
