@@ -1,0 +1,10 @@
+# apiVersion: builtin
+# kind: HelmChartInflationGenerator
+# metadata:
+#   name: argo-cd
+# name: helm-chart
+# chartHome: synced
+# values: values.yaml
+# releaseName: argo-cd
+# extraArgs:
+#   - --include-crds

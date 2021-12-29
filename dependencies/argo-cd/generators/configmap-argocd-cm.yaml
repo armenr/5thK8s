@@ -1,0 +1,21 @@
+apiVersion: builtin
+kind: ConfigMapGenerator
+behavior: merge
+metadata:
+  name: argocd-cm
+  namespace: argocd
+literals:
+  - "timeout.reconciliation=15s"
+  - "kustomize.buildOptions=--load-restrictor LoadRestrictionsNone --enable-helm"
+
+
+# apiVersion: v1
+# data: null
+# kind: ConfigMap
+# metadata:
+#   name: argocd-tls-certs-cm
+#   namespace: argocd
+#   labels:
+#     app.kubernetes.io/name: argocd-tls-certs-cm
+#     app.kubernetes.io/part-of: argocd
+

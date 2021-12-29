@@ -1,5 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+# namespace: argocd
 
 helmGlobals:
   chartHome: synced/
@@ -7,97 +8,17 @@ helmGlobals:
 helmCharts:
 - name: helm-chart
   releaseName: argo-cd
-  namespace: argocd
   includeCRDs: true
   valuesFile: values.yaml
+  namespace: argocd
+
+# !!! NOTE: Always use separate fucking generators for configMaps + HELM
+# !!!       REMEMBER THIS FACT!
+
+generators:
+  - generators/configmap-argocd-cm.yaml
 
 resources:
-  - patches/cmp-plugin.yaml
   - patches/traefik-middleware.yaml
   - patches/config-map-tls.yaml
-  - patches/config-map-kustomize.yaml
-
-configMapGenerator:
-  #Reconciliation timeouts
-  - name: argocd-cm
-    behavior: merge
-    literals:
-      - "timeout.reconciliation=15s"
-
-
-# TODO:
-#resources:
-  # - synced/extension-ui-rollouts/manifests/install.yaml
-  # - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/ha/install.yaml
-  # - https://raw.githubusercontent.com/argoproj-labs/applicationset/v0.2.0/manifests/install.yaml
-
-# components:
-# extensions controller component
-# - https://github.com/argoproj-labs/argocd-extensions/manifests
-
-
-  # - name: argocd-cm
-  #   behavior: merge
-  #   literals:
-  #   - |
-  #     repository.credentials=- passwordSecret:
-  #         key: git_token
-  #         name: autopilot-secret
-  #       url: https://github.com/
-  #       usernameSecret:
-  #         key: git_username
-  #         name: autopilot-secret
-
-# patches:
-#   # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
-#   - target:
-#       group: rbac.authorization.k8s.io
-#       version: v1
-#       kind: ClusterRoleBinding
-#     patch: |-
-#       - op: replace
-#         path: /subjects/0/namespace
-#         value: default
-
-
-# resources:
-# base Argo CD components
-# - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/ha/install.yaml
-# NOTE: SRC -> https://raw.githubusercontent.com/argoproj-labs/argocd-autopilot/main/manifests/base/kustomization.yaml
-#   - name: argocd-cm
-#     behavior: merge
-#     literals:
-#     - |
-#       repository.credentials=- passwordSecret:
-#           key: git_token
-#           name: autopilot-secret
-#         url: https://github.com/
-#         usernameSecret:
-#           key: git_username
-#           name: autopilot-secret
-
-
-
-  # This is only good for local setups.
-  # - name: argocd-cmd-params-cm
-  #   behavior: merge
-  #   literals:
-  #     - "server.disable.auth=true"    # TODO: This is bad, must figure this out...
-  #     - "server.insecure=true"
-  #     - "server.basehref=/argocd"
-  #     - "server.rootpath=/argocd"
-  #     - "server.staticassets=/shared/app"
-      # - "server.ingress.hosts=kubernetes.docker.internal"
-
-
-
-  # reconfigure argo to expose 7070
-  # - target:
-  #     name: argocd-server
-  #     version: v1
-  #     kind: Service
-  #   patch: |-
-  #     - op: replace
-  #       path: /spec/ports/0/port
-  #       value: 7070
-
+  - patches/cm-cmp-plugin.yaml
