@@ -1,5 +1,20 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: cert-manager
-resources:
-  - helm.yaml.generated
+# namespace: argocd
+
+helmGlobals:
+  chartHome: synced/
+
+helmCharts:
+- name: helm-chart
+  namespace: cert-manager
+  releaseName: cert-manager
+  includeCRDs: true
+  valuesFile: values.yaml
+
+# generators:
+#   - generators/configmap-argocd-cm.yaml
+
+# resources:
+#   - patches/traefik-middleware.yaml
+#   #- patches/cmp-plugin.yaml
