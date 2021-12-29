@@ -1,6 +1,7 @@
-# !!! WARNING: Any changes or new files to ANY vendir-managed directory or path  #
-# !!!          will be overwritten or destroyed on the next `vendir sync`        #
-# !!! ############################################################################
+##!!! WARNING: Any changes or new files to ANY vendir-managed directory or path  #
+##             will be overwritten or destroyed on the next `vendir sync`        #
+##################################################################################
+
 apiVersion: vendir.k14s.io/v1alpha1
 kind: Config
 minimumRequiredVersion: 0.18.0
@@ -16,6 +17,11 @@ directories:
       repository:
         url: https://charts.jetstack.io
     # version: 1.6.1
+
+  - path: crds
+    http:
+      # asset URL (required)
+      url: https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
 
 # Argo-CD Synced assets
 - path: argo-cd/synced/
