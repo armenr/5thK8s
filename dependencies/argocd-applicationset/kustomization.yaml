@@ -1,12 +1,12 @@
 # I'll be a real file someday
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 helmGlobals:
   chartHome: synced/
 
 helmCharts:
-- name: helm-chart
+-
+  name: helm-chart
   releaseName: argocd-applicationset
   namespace: argocd
   includeCRDs: true

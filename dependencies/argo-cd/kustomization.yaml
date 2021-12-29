@@ -6,11 +6,11 @@ helmGlobals:
   chartHome: synced/
 
 helmCharts:
-- name: helm-chart
-  releaseName: argo-cd
-  includeCRDs: true
-  valuesFile: values.yaml
+- name: helm-chart            # this is the directory within /synced...
   namespace: argocd
+  releaseName: argo-cd        # this is what you want to name your deployment
+  valuesFile: values.yaml
+  includeCRDs: true
 
 # !!! NOTE: Always use separate fucking generators for configMaps + HELM
 # !!!       REMEMBER THIS FACT!
