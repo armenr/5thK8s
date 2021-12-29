@@ -4,8 +4,8 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/managed-by: argocd-autopilot
-    app.kubernetes.io/name: argo-cd
-  name: argo-cd
+    app.kubernetes.io/name: autopilot-bootstrap
+  name: autopilot-bootstrap
   namespace: argocd
 spec:
   project: default
