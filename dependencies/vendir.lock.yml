@@ -5,6 +5,8 @@ directories:
       appVersion: v1.6.1
       version: v1.6.1
     path: helm-chart
+  - http: {}
+    path: crds
   path: cert-manager/synced
 - contents:
   - helmChart:
