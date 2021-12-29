@@ -5,3 +5,4 @@
 **/**/token.yaml
 dependencies/**/*.yaml.generated
 **/.vendir-tmp
+*-old
