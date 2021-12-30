@@ -12,6 +12,12 @@ helmCharts:
   includeCRDs: true
   valuesFile: ../../../argo-rollouts/values.yaml
 
+resources:
+  - ../../../argo-rollouts/patches/traefik-ingress.yaml
+  - ../../../argo-rollouts/patches/traefik-middleware.yaml
+
+
+
 # resources:
 #   - ../../../argo-rollouts/patches/traefik-middleware.yaml
 #   - ../../../argo-rollouts/synced/extension-ui-rollouts/manifests/install.yaml
