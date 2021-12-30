@@ -10,6 +10,7 @@ kind: Kustomization
 resources:
 - argo-cd.base.yaml
 - argocd-applicationsets.base.yaml
+- ../../argo-cd/synced/extension-ui-rollouts/manifests/install.yaml
 # - ../autopilot-bootstrap.yaml
 
 # Does some magical shit, don't care.
