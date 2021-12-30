@@ -20,6 +20,10 @@ directories:
       - stable
     path: vendor-manifests
   - git:
+      commitTitle: 'docs: update installation instructions...'
+      sha: 94e41261793f27c51de38f5c5544b1bb05a9e2e5
+    path: argocd-extensions
+  - git:
       commitTitle: 'refactor: update argo-ui version...'
       sha: c756b99e0c2ca43669c52835d9f948b116870330
     path: extension-ui-rollouts
