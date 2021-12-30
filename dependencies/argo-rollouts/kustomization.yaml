@@ -1,1 +1,20 @@
 # I'll be a real file someday
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: synced/
+
+helmCharts:
+- name: helm-chart
+  releaseName: argo-rollouts
+  namespace: argo-rollouts
+  includeCRDs: true
+  valuesFile: values.yaml
+
+resources:
+  - patches/traefik-ingress.yaml
+  - patches/traefik-middleware.yaml
+
+#   - ../../../argo-rollouts/patches/traefik-middleware.yaml
+#   - ../../../argo-rollouts/synced/extension-ui-rollouts/manifests/install.yaml
