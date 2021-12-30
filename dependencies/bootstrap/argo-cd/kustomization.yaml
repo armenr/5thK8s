@@ -29,13 +29,13 @@ configMapGenerator:
 
 # More magical shit
 # !!! Risky, revisit this
-patches:
-  # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
-  - target:
-      group: rbac.authorization.k8s.io
-      version: v1
-      kind: ClusterRoleBinding
-    patch: |-
-      - op: replace
-        path: /subjects/0/namespace
-        value: default
+# patches:
+#   # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
+#   - target:
+#       group: rbac.authorization.k8s.io
+#       version: v1
+#       kind: ClusterRoleBinding
+#     patch: |-
+#       - op: replace
+#         path: /subjects/0/namespace
+#         value: default
