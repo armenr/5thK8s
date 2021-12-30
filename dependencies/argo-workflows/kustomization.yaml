@@ -8,7 +8,7 @@ helmGlobals:
 helmCharts:
 - name: helm-chart
   releaseName: argo-workflows
-  namespace: workflows
+  namespace: argo
   includeCRDs: true
   valuesFile: values.yaml
 
