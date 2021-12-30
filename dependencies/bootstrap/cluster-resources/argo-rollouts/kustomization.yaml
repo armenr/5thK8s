@@ -13,7 +13,7 @@ helmCharts:
   valuesFile: ../../../argo-rollouts/values.yaml
 
 resources:
-  - ../../../argo-rollouts/patches/traefik-ingress-route.yaml
+  - ../../../argo-rollouts/patches/traefik-ingress.yaml
   - ../../../argo-rollouts/patches/traefik-middleware.yaml
 
 
