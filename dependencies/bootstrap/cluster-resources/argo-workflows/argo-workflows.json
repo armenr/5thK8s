@@ -1,4 +1,6 @@
 {
   "name": "argo-workflows",
-  "server": "https://kubernetes.default.svc"
+  "server": "https://kubernetes.default.svc",
+  "namespace": "argo",
+  "createNameSpaceBool": true
 }
