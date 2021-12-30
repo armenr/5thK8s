@@ -29,7 +29,7 @@ spec:
         app.kubernetes.io/managed-by: argocd-autopilot
         app.kubernetes.io/name: cluster-resources-{{name}}
       name: cluster-resources-{{name}}
-      namespace: {{namespace}}
+      namespace: '{{namespace}}'
     spec:
       destination:
         server: '{{server}}'
