@@ -2,8 +2,8 @@
 controller:
   workflowNamespaces:
     - default
-    - argo
     - argocd
+    - workflows
 
 ## @section server
 server:
