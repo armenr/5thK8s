@@ -31,3 +31,27 @@ metadata:
   name: argo
 spec: {}
 status: {}
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  creationTimestamp: null
+  name: argo-rollouts
+spec: {}
+status: {}
+
+# ---
+
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   annotations:
+#     argocd.argoproj.io/sync-options: Prune=false
+#   creationTimestamp: null
+#   name: cert-manager
+# spec: {}
+# status: {}

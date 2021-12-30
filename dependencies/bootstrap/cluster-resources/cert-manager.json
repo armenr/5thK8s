@@ -1,0 +1,6 @@
+{
+  "name": "cert-manager",
+  "namespace": "cert-manager",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": true
+}
