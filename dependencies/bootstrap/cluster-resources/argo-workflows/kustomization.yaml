@@ -1,7 +1,6 @@
 # I'll be a real file someday
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: workflows
 
 helmGlobals:
   chartHome: ../../../argo-workflows/synced/
@@ -9,7 +8,7 @@ helmGlobals:
 helmCharts:
 - name: helm-chart
   releaseName: argo-workflows
-  namespace: workflows
+  namespace: argo
   includeCRDs: true
   valuesFile: ../../../argo-workflows/values.yaml
 
