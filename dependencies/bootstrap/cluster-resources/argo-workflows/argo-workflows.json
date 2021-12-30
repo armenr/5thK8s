@@ -1,0 +1,4 @@
+{
+  "name": "argo-workflows",
+  "server": "https://kubernetes.default.svc"
+}

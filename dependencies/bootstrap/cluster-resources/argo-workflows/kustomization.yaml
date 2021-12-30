@@ -1,0 +1,16 @@
+# I'll be a real file someday
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../../argo-workflows/synced/
+
+helmCharts:
+- name: helm-chart
+  releaseName: argo-workflows
+  namespace: argo-workflows
+  includeCRDs: true
+  valuesFile: ../../../argo-workflows/values.yaml
+
+resources:
+  - ../../../argo-workflows/patches/traefik-middleware.yaml
