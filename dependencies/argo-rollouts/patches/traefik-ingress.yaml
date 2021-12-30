@@ -5,7 +5,7 @@ metadata:
   annotations:
     ingress.kubernetes.io/rewrite-target: /$2
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: argo-rollouts-prefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: argo-rollouts-rollouts-prefix@kubernetescrd
 spec:
   rules:
     - host: kubernetes.docker.internal
