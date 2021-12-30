@@ -1,9 +1,17 @@
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: prefix-middleware
+#   namespace: argo-rollouts
+# spec:
+#   stripPrefix:
+#     prefixes:
+#       - /rollouts/
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: prefix-middleware
   namespace: argo-rollouts
 spec:
-  stripPrefix:
-    prefixes:
-      - /rollouts/
+  addPrefix:
+    prefix: /rollouts
