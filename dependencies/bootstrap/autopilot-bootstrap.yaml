@@ -13,7 +13,7 @@ spec:
     repoURL: https://github.com/armenr/5thK8s.git
     path: dependencies/bootstrap
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
     namespace: argocd
   syncPolicy:
     automated:
