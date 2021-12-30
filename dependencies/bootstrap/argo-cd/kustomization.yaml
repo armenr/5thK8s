@@ -8,8 +8,8 @@ kind: Kustomization
 ## kustomize build --enable-helm dependencies/argo-cd > dependencies/bootstrap/argo-cd/argo-cd.base.yaml
 ## kustomize build --enable-helm dependencies/argocd-applicationset > dependencies/bootstrap/argo-cd/argocd-applicationsets.base.yaml
 resources:
-- ../../argo-cd/
-- ../../argocd-applicationset/
+- ../../argo-cd
+- argocd-applicationsets.base.yaml
 
 # - argo-cd.base.yaml
 # - argocd-applicationsets.base.yaml
