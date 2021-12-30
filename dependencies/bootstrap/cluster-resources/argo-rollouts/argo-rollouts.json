@@ -1,0 +1,6 @@
+{
+  "name": "argo-rollouts",
+  "namespace": "argo-rollouts",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": true
+}
