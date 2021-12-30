@@ -7,11 +7,11 @@
 #   stripPrefix:
 #     prefixes:
 #       - /rollouts/
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: prefix-middleware
-  namespace: argo-rollouts
-spec:
-  addPrefix:
-    prefix: /rollouts
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: prefix-middleware
+#   namespace: argo-rollouts
+# spec:
+#   addPrefix:
+#     prefix: /rollouts

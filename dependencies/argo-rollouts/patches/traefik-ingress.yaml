@@ -3,9 +3,10 @@ kind: Ingress
 metadata:
   name: rollouts-ingress
   annotations:
-    ingress.kubernetes.io/rewrite-target: /$2
+    # ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/app-root: /rollouts
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: argo-rollouts-prefix-middleware@kubernetescrd
+    # traefik.ingress.kubernetes.io/router.middlewares: argo-rollouts-prefix-middleware@kubernetescrd
 spec:
   rules:
     - host: kubernetes.docker.internal
@@ -15,6 +16,6 @@ spec:
               service:
                 name: argo-rollouts-dashboard
                 port:
-                  name: http
-            path: /rollouts
-            pathType: ImplementationSpecific
+                  name: dashboard
+            path: /
+            pathType: Prefix
