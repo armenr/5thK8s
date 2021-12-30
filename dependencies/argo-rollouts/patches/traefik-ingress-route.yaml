@@ -10,9 +10,9 @@ spec:
   - kind: Rule
     match: Host(`kubernetes.docker.internal`) && PathPrefix(`/rollouts`)
     priority: 10
-    # middlewares:
-    # - name: middleware1
-    #   namespace: default
+    middlewares:
+    - name: rollouts-prefix
+      namespace: argo-rollouts
     services:
     - kind: Service
       name: argo-rollouts-dashboard
