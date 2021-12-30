@@ -57,7 +57,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 6.2.6
-      version: 15.6.9
+      version: 15.6.10
     path: helm-chart
   path: redis/synced
 - contents:
@@ -69,7 +69,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 10.5.13
-      version: 10.1.1
+      version: 10.2.0
     path: helm-chart
   path: mariadb/synced
 - contents:
