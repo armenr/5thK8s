@@ -68,6 +68,8 @@ repoServer:
           name: tmp
 
 redis:
+  auth:
+    enabled: false
   master:
     persistence:
       enabled: false
