@@ -29,10 +29,11 @@ spec:
         app.kubernetes.io/managed-by: argocd-autopilot
         app.kubernetes.io/name: cluster-resources-{{name}}
       name: cluster-resources-{{name}}
-      namespace: '{{namespace}}'
+      namespace: argocd
     spec:
       destination:
         server: '{{server}}'
+        namespace: '{{namespace}}'
       ignoreDifferences:
       - group: argoproj.io
         jsonPointers:
@@ -44,7 +45,7 @@ spec:
         repoURL: https://github.com/armenr/5thK8s.git
       syncPolicy:
         syncOptions:
-        - CreateNamespace=true
+        - CreateNamespace={{createNamespaceBool}}
         automated:
           allowEmpty: true
           selfHeal: true

@@ -2,5 +2,5 @@
   "name": "in-cluster",
   "namespace": "argocd",
   "server": "https://kubernetes.default.svc",
-  "createNameSpaceBool": false
+  "createNamespaceBool": false
 }
