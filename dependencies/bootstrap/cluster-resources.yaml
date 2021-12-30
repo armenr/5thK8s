@@ -45,7 +45,7 @@ spec:
         repoURL: https://github.com/armenr/5thK8s.git
       syncPolicy:
         syncOptions:
-        - CreateNamespace={{createNamespaceBool}}
+        - CreateNamespace=true
         automated:
           allowEmpty: true
           selfHeal: true
