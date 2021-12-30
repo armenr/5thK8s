@@ -14,7 +14,7 @@ helmCharts:
 
 resources:
   - patches/traefik-ingress.yaml
-  - patches/traefik-middleware.yaml
+  # - patches/traefik-middleware.yaml
 
 #   - ../../../argo-rollouts/patches/traefik-middleware.yaml
 #   - ../../../argo-rollouts/synced/extension-ui-rollouts/manifests/install.yaml
