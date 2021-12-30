@@ -69,11 +69,10 @@ repoServer:
 
 redis:
   auth:
-    enabled: false
+    existingSecret: redis-password-secret
   master:
     persistence:
       enabled: false
-
   replica:
     replicaCount: 1
     persistence:
