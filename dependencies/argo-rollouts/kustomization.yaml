@@ -12,8 +12,8 @@ helmCharts:
   includeCRDs: true
   valuesFile: values.yaml
 
-resources:
-  - patches/traefik-ingress.yaml
+# resources:
+  # - patches/traefik-ingress-route.yaml
   # - patches/traefik-middleware.yaml
 
 #   - ../../../argo-rollouts/patches/traefik-middleware.yaml

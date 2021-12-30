@@ -1,0 +1,22 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress-rollouts-dashboard
+  namespace: argo-rollouts
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`kubernetes.docker.internal`) && PathPrefix(`/rollouts`)
+    priority: 10
+    # middlewares:
+    # - name: middleware1
+    #   namespace: default
+    services:
+    - kind: Service
+      name: argo-rollouts-dashboard
+      namespace: argo-rollouts
+      passHostHeader: true
+      scheme: http
+
