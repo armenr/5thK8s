@@ -14,3 +14,4 @@ helmCharts:
 
 resources:
   - ../../../argo-workflows/patches/traefik-middleware.yaml
+  - ../../../argo-workflows/synced/extension-ui-rollouts/manifests/install.yaml
