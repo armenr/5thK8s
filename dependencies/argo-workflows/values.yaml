@@ -15,7 +15,7 @@ server:
   auth:
     enabled: true
     mode: server
-  baseHref: /workflows/
+  # baseHref: /workflows/
 
   ## @sub-section server.service
   service:
