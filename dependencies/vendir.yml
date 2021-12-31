@@ -187,3 +187,12 @@ directories:
       repository:
         url: https://bitnami-labs.github.io/sealed-secrets
     # version: 1.6.1
+
+- path: crossplane/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: crossplane
+      repository:
+        url: https://charts.crossplane.io/stable
+    # version: 1.6.1
