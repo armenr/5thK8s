@@ -4,7 +4,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
   creationTimestamp: null
-  name: cluster-resources
+  name: root-cluster-resources
   namespace: argocd
 spec:
   generators:

@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: argocd-autopilot
     app.kubernetes.io/name: argo-cd
-  name: argo-cd
+  name: root-argo-cd
   namespace: argocd
 spec:
   destination:

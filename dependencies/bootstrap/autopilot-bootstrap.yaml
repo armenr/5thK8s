@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: argocd-autopilot
     app.kubernetes.io/name: autopilot-bootstrap
-  name: autopilot-bootstrap
+  name: root-autopilot-bootstrap
   namespace: argocd
 spec:
   project: default

@@ -15,3 +15,6 @@ THEN, simply visit: http://kubernetes.docker.internal/argocd/
 
 username: admin
 password: BLEEGASTAN123
+
+
+<set to the key 'redis-password' in secret 'argo-cd-redis'>  Optional: false
