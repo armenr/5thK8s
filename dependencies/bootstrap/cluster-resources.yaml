@@ -55,6 +55,3 @@ spec:
           selfHeal: true
           prune: true
 status: {}
-
-  ignoreDifferences:
-  - kind: ClusterRole
