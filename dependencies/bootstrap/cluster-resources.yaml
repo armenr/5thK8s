@@ -40,7 +40,6 @@ spec:
         - /status
         kind: Application
       - kind: ClusterRole
-        app: crossplane
         namespace: crossplane-system
         jsonPointers:
         - /rules
