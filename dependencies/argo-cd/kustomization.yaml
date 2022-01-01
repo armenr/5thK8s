@@ -28,7 +28,12 @@ resources:
   - patches/traefik-middleware.yaml
   - patches/config-map-tls.yaml
   - patches/cm-cmp-plugin.yaml
-  # - synced/argocd-extensions/manifests
+  # - synced/extension-ui-rollouts/manifests/crds
+  # - synced/extension-ui-rollouts/manifests/rbac
+
+
+components:
+  - synced/argocd-extensions/manifests
 
 # patches:
 #   # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
