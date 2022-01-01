@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: crossplane-system
+
+helmGlobals:
+  chartHome: synced/
+
+helmCharts:
+- name: helm-chart
+  namespace: crossplane-system
+  releaseName: crossplane
+  includeCRDs: true
+  valuesFile: values.yaml
+
+# generators:
+#   - generators/configmap-argocd-cm.yaml
+
+# resources:
+#   - patches/traefik-middleware.yaml
+#   #- patches/cmp-plugin.yaml
