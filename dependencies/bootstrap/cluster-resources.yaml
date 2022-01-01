@@ -23,6 +23,9 @@ spec:
             repoURL: ""
   syncPolicy:
     preserveResourcesOnDeletion: true
+    automated:
+      prune: true
+      selfHeal: true
   template:
     metadata:
       labels:
