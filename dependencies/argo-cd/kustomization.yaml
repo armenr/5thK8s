@@ -32,8 +32,8 @@ resources:
   # - synced/extension-ui-rollouts/manifests/rbac
 
 
-components:
-  - synced/argocd-extensions/manifests
+# components:
+#   - synced/argocd-extensions/manifests
 
 # patches:
 #   # reset the crbs to `subject.namespace: default`, so that argo-cd will later change them to the actual ns
