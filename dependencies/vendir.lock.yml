@@ -10,8 +10,8 @@ directories:
   path: cert-manager/synced
 - contents:
   - helmChart:
-      appVersion: 2.2.1
-      version: 2.0.19
+      appVersion: 2.2.2
+      version: 2.0.20
     path: helm-chart
   - git:
       commitTitle: Bump version to 2.2.1
@@ -67,7 +67,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 3.9.11
-      version: 8.24.12
+      version: 8.24.13
     path: helm-chart
   path: rabbitmq/synced
 - contents:
