@@ -6,3 +6,4 @@ Here be TODOs
 [-] GO THROUGH AND FIX ALL THE KUSTOMIZE FILES (SCRIPT THIS)
 [-] Use helm template from argoproj-argocd helm w/ bitnami helm chart to generate extensions CRDS & RBAC, etc...
 [-] https://aws.amazon.com/blogs/containers/gitops-model-for-provisioning-and-bootstrapping-amazon-eks-clusters-using-crossplane-and-argo-cd/
+[-] https://www.infracloud.io/blogs/how-to-create-ephemeral-environments-using-crossplane-and-argocd/
