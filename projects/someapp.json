@@ -1,0 +1,9 @@
+{
+  "env": "local",
+  "userGivenName": "someApp",
+  "destNamespace": "argocd",
+  "destServer": "",
+  "srcPath": "",
+  "srcRepoURL": "",
+  "srcTargetRevision": ""
+}
