@@ -1,0 +1,6 @@
+{
+  "name": "argocd-applicationsets",
+  "namespace": "argocd",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": true
+}

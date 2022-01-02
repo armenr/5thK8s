@@ -4,29 +4,29 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/managed-by: argocd-autopilot
-    app.kubernetes.io/name: autopilot-bootstrap
-  name: root-autopilot-bootstrap
+    app.kubernetes.io/name: autobootstrap
+  name: root-autobootstrap
   namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/armenr/5thK8s.git
-    path: bootstrap
   destination:
-    server: https://kubernetes.default.svc
     namespace: argocd
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-      allowEmpty: true
-    syncOptions:
-      - allowEmpty=true
+    server: https://kubernetes.default.svc
   ignoreDifferences:
     - group: argoproj.io
-      kind: Application
       jsonPointers:
         - /status
+      kind: Application
+  project: default
+  source:
+    path: bootstrap/apps
+    repoURL: https://github.com/armenr/5thK8s.git
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - allowEmpty=true
 status:
   health: {}
   summary: {}
@@ -34,5 +34,5 @@ status:
     comparedTo:
       destination: {}
       source:
-        repoURL: ""
-    status: ""
+        repoURL: ''
+    status: ''

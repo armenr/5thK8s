@@ -2,25 +2,25 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: '0'
   creationTimestamp: null
   name: root-cluster-resources
   namespace: argocd
 spec:
   generators:
-  - git:
-      files:
-      - path: bootstrap/cluster-resources/*.json
-      repoURL: https://github.com/armenr/5thK8s.git
-      requeueAfterSeconds: 20
-      revision: ""
-      template:
-        metadata: {}
-        spec:
-          destination: {}
-          project: ""
-          source:
-            repoURL: ""
+    - git:
+        files:
+          - path: bootstrap/cluster-resources/*.json
+        repoURL: https://github.com/armenr/5thK8s.git
+        requeueAfterSeconds: 20
+        revision: ''
+        template:
+          metadata: {}
+          spec:
+            destination: {}
+            project: ''
+            source:
+              repoURL: ''
   syncPolicy:
     preserveResourcesOnDeletion: true
   template:
@@ -32,22 +32,22 @@ spec:
       namespace: argocd
     spec:
       destination:
-        server: '{{server}}'
         namespace: '{{namespace}}'
+        server: '{{server}}'
       ignoreDifferences:
-      - group: argoproj.io
-        jsonPointers:
-        - /status
-        kind: Application
+        - group: argoproj.io
+          jsonPointers:
+            - /status
+          kind: Application
       project: default
       source:
         path: bootstrap/cluster-resources/{{name}}
         repoURL: https://github.com/armenr/5thK8s.git
       syncPolicy:
-        syncOptions:
-        - CreateNamespace=true
         automated:
           allowEmpty: true
-          selfHeal: true
           prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 status: {}

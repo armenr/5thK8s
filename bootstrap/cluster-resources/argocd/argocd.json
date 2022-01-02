@@ -1,0 +1,6 @@
+{
+  "name": "argocd",
+  "namespace": "argocd",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": true
+}
