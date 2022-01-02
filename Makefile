@@ -26,11 +26,6 @@ endef
 
 cluster:
 	k3d cluster create local-$(USER) --config ./assets/k3d_local.yaml
-	$(MAKE) install-cert-manager
-	$(MAKE) v-sync
-	$(MAKE) v-manifests
-	$(MAKE) argo-workflows-install
-	$(MAKE) argocd-install
 
 bootstrap-argocd:
 	$(MAKE) install-argocd
