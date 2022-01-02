@@ -34,7 +34,7 @@ cluster:
 
 bootstrap-argocd:
 	$(MAKE) install-argocd
-	$(MAKE) install-argocd-appsets
+	$(MAKE) install-autobootstrap
 
 remove-argocd:
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
@@ -47,6 +47,10 @@ remove-argocd:
 
 install-argocd:
 	kubectl create namespace argocd;
+	kubectl -n argocd create secret generic \
+		github-repo-secret \
+		--from-literal git_username=$GITHUB_USER \
+		--from-literal git-token=$GIT_TOKEN
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
 		bootstrap/cluster-resources/argocd \
 		| kubectl -n argocd apply -f -; \
@@ -54,8 +58,8 @@ install-argocd:
 		bootstrap/cluster-resources/argocd-applicationset \
 		| kubectl -n argocd apply -f -;
 
-install-cluster-resources:
-	kubectl create -n argocd -f bootstrap/apps/appset-cluster-resources.yaml;
+install-autobootstrap:
+	kubectl create -n argocd -f bootstrap/apps/autobootstrap-manifest.yaml;
 
 # bootstrap-argocd:
 
