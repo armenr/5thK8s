@@ -56,6 +56,18 @@ metadata:
 spec: {}
 status: {}
 
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  creationTimestamp: null
+  name: sealed-secrets
+spec: {}
+status: {}
+
 # ---
 
 # apiVersion: v1
