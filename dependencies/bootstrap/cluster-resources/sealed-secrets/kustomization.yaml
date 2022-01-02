@@ -3,3 +3,11 @@ kind: Kustomization
 
 resources:
   - ../../../sealed-secrets/
+
+patches:
+  - patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --update-status
+    target:
+      kind: Deployment
