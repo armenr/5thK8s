@@ -7,7 +7,7 @@ metadata:
 literals:
   - "timeout.reconciliation=15s"
   - "kustomize.buildOptions=--load-restrictor LoadRestrictionsNone --enable-helm"
-  - "resource.compareoptions.ignoreAggregatedRoles=true"
+  # - "resource.compareoptions.ignoreAggregatedRoles=true"
 
 
 # apiVersion: v1

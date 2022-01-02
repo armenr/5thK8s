@@ -30,6 +30,9 @@ configMapGenerator:
         usernameSecret:
           key: git_username
           name: autopilot-secret
+    - |
+      resource.compareoptions: |
+        ignoreAggregatedRoles: true
 
 
 # More magical shit
