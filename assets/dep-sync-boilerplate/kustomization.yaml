@@ -1,6 +1,0 @@
-# I'll be a real file some day
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: FILL_ME_IN
-resources:
-  - helm.yaml.generated

@@ -31,8 +31,6 @@ ports:
     nodeFilters:
       - loadbalancer
 
-
-
 ###################### GRAVEYARD #######################
 
 # volumes:
