@@ -5,10 +5,10 @@ kind: Kustomization
 
 # ArgoCD + ApplicationSets are required together
 ## To update these, BUILD THEM FROM OUR OWN DEPENDENCIES
-## kustomize build --enable-helm dependencies/argo-cd > dependencies/bootstrap/argo-cd/argo-cd.base.yaml
-## kustomize build --enable-helm dependencies/argocd-applicationset > dependencies/bootstrap/argo-cd/argocd-applicationsets.base.yaml
+## kustomize build --enable-helm dependencies/argo-cd > bootstrap/argo-cd/argo-cd.base.yaml
+## kustomize build --enable-helm dependencies/argocd-applicationset > bootstrap/argo-cd/argocd-applicationsets.base.yaml
 resources:
-- ../../argo-cd
+- ../dependencies/argo-cd
 - argocd-applicationsets.base.yaml
 
 # - argo-cd.base.yaml

@@ -35,12 +35,12 @@ bootstrap-argocd:
 		--from-literal git-token=$GIT_TOKEN
 	kustomize build \
 		dependencies/argo-cd \
-		> dependencies/bootstrap/argo-cd/argo-cd.base.yaml
+		> bootstrap/argo-cd/argo-cd.base.yaml
 	kustomize build --enable-helm \
 		dependencies/argocd-applicationset \
-		> dependencies/bootstrap/argo-cd/argocd-applicationsets.base.yaml
+		> bootstrap/argo-cd/argocd-applicationsets.base.yaml
 	kustomize build \
-		dependencies/bootstrap/argo-cd \
+		bootstrap/argo-cd \
 		| kubectl apply -n argocd -f -
 
 # destroy all the things

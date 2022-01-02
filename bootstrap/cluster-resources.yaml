@@ -10,7 +10,7 @@ spec:
   generators:
   - git:
       files:
-      - path: dependencies/bootstrap/cluster-resources/*.json
+      - path: bootstrap/cluster-resources/*.json
       repoURL: https://github.com/armenr/5thK8s.git
       requeueAfterSeconds: 20
       revision: ""
@@ -39,14 +39,9 @@ spec:
         jsonPointers:
         - /status
         kind: Application
-      # - kind: ClusterRole
-      #   group: apps
-      #   namespace: crossplane-system
-      #   jsonPointers:
-      #   - /rules
       project: default
       source:
-        path: dependencies/bootstrap/cluster-resources/{{name}}
+        path: bootstrap/cluster-resources/{{name}}
         repoURL: https://github.com/armenr/5thK8s.git
       syncPolicy:
         syncOptions:

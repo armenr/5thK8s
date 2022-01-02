@@ -3,9 +3,9 @@ k3d cluster create --config assets/k3d_local.yaml
 
 kubectl create namespace argocd
 
-kustomize build --load-restrictor LoadRestrictionsNone --enable-helm dependencies/bootstrap/argo-cd | kubectl apply -n argocd -f -
+kustomize build --load-restrictor LoadRestrictionsNone --enable-helm bootstrap/argo-cd | kubectl apply -n argocd -f -
 
-cd dependencies/bootstrap && kubectl create -f autopilot-bootstrap.yaml
+cd bootstrap && kubectl create -f autopilot-bootstrap.yaml
 
 # If `create` gives you shit, use `kubectl apply` instead
 

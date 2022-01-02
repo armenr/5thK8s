@@ -18,7 +18,7 @@ spec:
     kind: Application
   project: default
   source:
-    path: dependencies/bootstrap/argo-cd
+    path: bootstrap/argo-cd
     repoURL: https://github.com/armenr/5thK8s.git
   syncPolicy:
     automated:
