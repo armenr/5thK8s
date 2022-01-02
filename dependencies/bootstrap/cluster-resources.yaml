@@ -40,6 +40,7 @@ spec:
         - /status
         kind: Application
       - kind: ClusterRole
+        group: argoproj.io
         namespace: crossplane-system
         jsonPointers:
         - /rules
