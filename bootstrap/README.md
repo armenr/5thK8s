@@ -1,20 +1,43 @@
-# Bootstrap
+# Get Bootstrapped
 
-This dependency bootstraps our argo-cd deployment. It mimics the same bootstrap approach that `argocd-autopilot` takes...just with slight changes and adaptation so that it fits into our broader workflow.
+## Pre-requisites
 
-Whie it all seems a bit recursive and self-referencial, this is worthwile, because the cluster self-manages.
+- k3d
+- docker
+- kustomize
+- kubectl
 
-Yes. That's right. ArgoCD manages itself, once bootstrapped.
+## Quick Start
+```
+export GIT_TOKEN=<YOUR AWSOME TOKEN>
+export GITHUB_USER=<YOUR AWESOME USERNAME>
 
-For example, to update ArgoCD, all we have to do is push a new manifest to `bootstrap/argo-cd/argo-cd.base.yaml` and watch the magic happen.
+# spin up k3d cluster
+# NOTE: See Makefile for shell commands...it's all really vanilla
 
-## Bootstrapping
-UPDATE ME
+make cluster
 
-THEN, simply visit: http://kubernetes.docker.internal/argocd/
+# bootstrap the core cluster stack
+# NOTE: ALL you need to install, to bootstrap everything, is JUST ./bootstrap/apps/autobootstrap-manifest.yaml
+# After that, the cluster self-manages via ./bootstrap/cluster-resources
 
-username: admin
-password: BLEEGASTAN123
+make bootstrap-argocd
 
+```
 
-<set to the key 'redis-password' in secret 'argo-cd-redis'>  Optional: false
+That's it. Everything else happens all on its own
+
+- Make sure you have `kubernetes.docker.internal` in your `/etc/hosts`
+
+- ArgoCD: http://kubernetes.docker.internal/argocd
+
+  - User:     admin
+  - Password: BLEEGASTAN123
+
+- Argo-Workflows: http://kubernetes.docker.internal/workflows
+
+  - workflows has no authentication (for now)
+
+- Argo Rollouts: (for now, use port forwarding for argo-rollouts) -> port forward -> open in http://localhost:3100/rollouts
+
+- Traefik dashboard: `kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" -n kube-system --output=name) -n kube-system 9000:9000`
