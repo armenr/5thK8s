@@ -7,3 +7,5 @@ dependencies/**/*.yaml.generated
 **/.vendir-tmp
 *-old
 redis-password.txt
+.sliced
+sliced
