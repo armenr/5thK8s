@@ -1,5 +1,3 @@
----
-
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
@@ -10,7 +8,6 @@ metadata:
 spec:
   package: crossplane/provider-aws:alpha
 
----
 # NOTE: WTF is this for?
 
 # apiVersion: batch/v1
