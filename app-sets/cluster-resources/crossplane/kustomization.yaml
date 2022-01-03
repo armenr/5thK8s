@@ -4,3 +4,11 @@ kind: Kustomization
 resources:
   - ../../../dependencies/crossplane/
   - ../../../crossplane-assets/
+
+# secretGenerator:
+# - name: aws-credentials
+#   literals:
+#   - AWS_ACCESS_KEY_ID=$(aws configure get default.aws_access_key_id)
+#   - AWS_SECRET_KEY=$(aws configure get default.aws_secret_access_key)
+# generatorOptions:
+#   disableNameSuffixHash: true
