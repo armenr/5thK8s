@@ -12,6 +12,11 @@ patches:
     target:
       kind: Deployment
   - patch: |-
+      - op: remove
+        path: /spec/ports/0/name
+    target:
+      kind: Service
+  - patch: |-
       - op: replace
         path: /spec/ports/0/targetPort
         value: 8080
@@ -29,9 +34,9 @@ patches:
   #       value: sealed-secrets-controller
   #   target:
   #     kind: Service
-  - patch: |-
-      - op: replace
-        path: /metadata/name
-        value: sealed-secrets-controller
-    target:
-      kind: Service
+  # - patch: |-
+  #     - op: replace
+  #       path: /metadata/name
+  #       value: sealed-secrets-controller
+  #   target:
+  #     kind: Service
