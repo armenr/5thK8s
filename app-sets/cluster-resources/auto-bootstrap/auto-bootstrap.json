@@ -1,6 +1,0 @@
-{
-  "name": "auto-bootstrap",
-  "namespace": "argocd",
-  "server": "https://kubernetes.default.svc",
-  "createNamespaceBool": true
-}
