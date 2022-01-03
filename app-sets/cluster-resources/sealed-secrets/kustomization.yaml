@@ -11,3 +11,27 @@ patches:
         value: --update-status
     target:
       kind: Deployment
+  - patch: |-
+      - op: replace
+        path: /spec/ports/0/targetPort
+        value: 8080
+    target:
+      kind: Service
+  # - patch: |-
+  #     - op: replace
+  #       path: /metadata/labels/app.kubernetes.io/instance
+  #       value: sealed-secrets-controller
+  #   target:
+  #     kind: Service
+  # - patch: |-
+  #     - op: replace
+  #       path: /metadata/labels/app.kubernetes.io/name
+  #       value: sealed-secrets-controller
+  #   target:
+  #     kind: Service
+  - patch: |-
+      - op: replace
+        path: /metadata/name
+        value: sealed-secrets-controller
+    target:
+      kind: Service
