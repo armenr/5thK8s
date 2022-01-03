@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: crossplane-system
 
 resources:
-  # - configs/provider-configs.yaml
+  - configs/provider-configs.yaml
   # - compositions/cluster/cluster-aws.yaml
   # - compositions/cluster/definition.yaml
   - providers/providers.yaml
