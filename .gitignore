@@ -9,3 +9,4 @@ dependencies/**/*.yaml.generated
 redis-password.txt
 .sliced
 sliced
+*-creds.*
