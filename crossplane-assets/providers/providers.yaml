@@ -5,7 +5,7 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  package: crossplane/provider-aws:latest
+  package: crossplane/provider-aws:master
 
 ---
 
@@ -14,4 +14,4 @@ kind: Provider
 metadata:
   name: provider-helm
 spec:
-  package: crossplane/provider-helm:latest
+  package: "crossplane/provider-helm:master"
