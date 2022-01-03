@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
   - configs/provider-configs.yaml
-  - cluster/cluster-aws.yaml
-  - cluster/definition.yaml
+  - compositions/cluster/cluster-aws.yaml
+  - compositions/cluster/definition.yaml
   - providers/providers.yaml

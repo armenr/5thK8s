@@ -4,31 +4,8 @@ apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws
-  annotations:
-    argocd.argoproj.io/sync-wave: "30"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   package: crossplane/provider-aws:latest
-
----
-# NOTE: WTF is this for?
-
-apiVersion: batch/v1
-kind: Job
-metadata:
-  generateName: after-provider
-  annotations:
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
-    argocd.argoproj.io/sync-wave: "40"
-spec:
-  template:
-    spec:
-      containers:
-        - name: page-down
-          image: alpine:latest
-          command: ["sleep", "10"]
-      restartPolicy: Never
 
 ---
 
