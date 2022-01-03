@@ -4,6 +4,7 @@ namespace: crossplane-system
 
 resources:
   - configs/provider-configs.yaml
+  - configs/aws-credentials.yaml
   # - compositions/cluster/cluster-aws.yaml
   # - compositions/cluster/definition.yaml
   - providers/providers.yaml
