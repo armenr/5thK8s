@@ -19,7 +19,7 @@ make cluster
 
 # bootstrap the core cluster stack
 # NOTE: ALL you need to install, to bootstrap everything, is JUST ./bootstrap/apps/autobootstrap-manifest.yaml
-# After that, the cluster self-manages via ./bootstrap/cluster-resources
+# After that, the cluster self-manages via ./app-sets/cluster-resources
 
 make bootstrap-argocd
 

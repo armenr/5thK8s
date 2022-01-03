@@ -6,7 +6,7 @@
 #     argocd.argoproj.io/sync-options: PruneLast=true
 #     argocd.argoproj.io/sync-wave: "-2"
 #   creationTimestamp: null
-#   name: '{{env}}'
+#   name:
 #   namespace: argocd
 # spec:
 #   clusterResourceWhitelist:

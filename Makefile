@@ -33,10 +33,10 @@ bootstrap-argocd:
 
 remove-argocd:
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		bootstrap/cluster-resources/argocd \
+		app-sets/cluster-resources/argocd \
 		| kubectl -n argocd delete -f -;
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		bootstrap/cluster-resources/argocd-applicationset \
+		app-sets/cluster-resources/argocd-applicationset \
 		| kubectl -n argocd delete -f -;
 	kubectl delete namespace argocd
 
@@ -47,10 +47,10 @@ install-argocd:
 		--from-literal git_username=$GITHUB_USER \
 		--from-literal git-token=$GIT_TOKEN
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		bootstrap/cluster-resources/argocd \
+		app-sets/cluster-resources/argocd \
 		| kubectl -n argocd apply -f -; \
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		bootstrap/cluster-resources/argocd-applicationset \
+		app-sets/cluster-resources/argocd-applicationset \
 		| kubectl -n argocd apply -f -;
 
 install-autobootstrap:
