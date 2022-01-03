@@ -61,8 +61,8 @@ crossplane-aws-sealed-secret:
 		aws_access_key_id = $$(aws configure get default.aws_access_key_id) \
 		aws_secret_access_key = $$(aws configure get default.aws_secret_access_key) \
 		" \
-	| kubectl create secret generic aws-creds \
-		--from-file creds=./aws-creds.cfg \
+	| kubectl create secret generic aws-credentials \
+		--from-file aws-credentials=./aws-creds.cfg \
 		--output json \
 		--dry-run=client \
     | kubeseal \
