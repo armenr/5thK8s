@@ -5,11 +5,11 @@
     "editor.fontLigatures": true,
     "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
     "terminal.integrated.shell.osx": "/bin/zsh",
-    "editor.fontSize": 15,
+    "editor.fontSize": 13.6,
     "terminal.integrated.fontSize": 14,
     "files.exclude": {
       "**/.git": true,
-
+      ".vscode/*.log": true,
       "**/.DS_Store": true,
       "**/node_modules": true,
   },
