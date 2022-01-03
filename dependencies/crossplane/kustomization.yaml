@@ -11,10 +11,3 @@ helmCharts:
   releaseName: crossplane
   includeCRDs: true
   valuesFile: values.yaml
-
-# generators:
-#   - generators/configmap-argocd-cm.yaml
-
-# resources:
-#   - patches/traefik-middleware.yaml
-#   #- patches/cmp-plugin.yaml
