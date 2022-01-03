@@ -56,6 +56,15 @@ install-argocd:
 install-autobootstrap:
 	kubectl create -n argocd -f bootstrap/apps/autobootstrap-manifest.yaml;
 
+create-aws-sealed-secret:
+	kubectl --namespace crossplane-system \
+    create secret generic aws-credentials \
+    --from-file creds=./aws-creds.cfg \
+    --output json \
+    --dry-run=client \
+    | kubeseal --format yaml \
+    | tee crossplane-configs/aws-credentials.yaml
+
 # bootstrap-argocd:
 
 # 	kubectl -n argocd create secret generic \
