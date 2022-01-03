@@ -1,6 +1,0 @@
-{
-  "name": "crossplane",
-  "namespace": "crossplane-system",
-  "server": "https://kubernetes.default.svc",
-  "createNamespaceBool": true
-}
