@@ -1,6 +1,5 @@
 # Recitals
 .ONESHELL: kapp-deploy-helm
-
 .PHONY : \
     argo-bootstrap \
     argo-deprovision \
@@ -25,11 +24,19 @@ define chdir
 endef
 
 cluster:
-	k3d cluster create local-$(USER) --config ./assets/k3d_local.yaml
+	k3d cluster create local-$(USER) --config ./assets/k3d_local.yaml --wait
 
 bootstrap-argocd:
+	echo "Mandatory pause while cluster boots up..."
+	sleep 30;
+	kubectl wait --for=condition=available --timeout=360s --all deployments --all-namespaces;
+	$(MAKE) argocd-namespace
 	$(MAKE) install-argocd
-	$(MAKE) install-autobootstrap
+	$(MAKE) install-cluster-resources
+	echo "WAITING FOR SEALED SECRETS & STUFF..."
+	sleep 30;
+	kubectl wait --for=condition=available --timeout=360s --all deployments --all-namespaces;
+	$(MAKE) crossplane-aws-sealed-secret
 
 remove-argocd:
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
@@ -41,7 +48,6 @@ remove-argocd:
 	kubectl delete namespace argocd
 
 install-argocd:
-	kubectl create namespace argocd;
 	kubectl -n argocd create secret generic \
 		github-repo-secret \
 		--from-literal git_username=$GITHUB_USER \
@@ -51,13 +57,22 @@ install-argocd:
 		| kubectl -n argocd apply -f -; \
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
 		app-sets/cluster-resources/argocd-applicationset \
-		| kubectl -n argocd apply -f -;
+		| kubectl -n argocd apply -f - \
+		&& kubectl wait \
+			--for=condition=available \
+			--timeout=360s \
+			--all deployments \
+			--all-namespaces;
 
-install-autobootstrap:
-	kubectl create -n argocd -f bootstrap/apps/autobootstrap-manifest.yaml;
+argocd-namespace:
+	kubectl create namespace argocd
+
+install-cluster-resources:
+	kubectl create -n argocd -f bootstrap/apps/appset-cluster-resources.yaml;
 
 crossplane-aws-sealed-secret:
-	echo "[default] \
+	echo \
+		"[default] \
 		aws_access_key_id = $$(aws configure get default.aws_access_key_id) \
 		aws_secret_access_key = $$(aws configure get default.aws_secret_access_key) \
 		" \
