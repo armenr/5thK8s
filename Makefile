@@ -50,8 +50,8 @@ remove-argocd:
 install-argocd:
 	kubectl -n argocd create secret generic \
 		github-repo-secret \
-		--from-literal git_username=$GITHUB_USER \
-		--from-literal git-token=$GIT_TOKEN
+		--from-literal git_username=$$GITHUB_USER \
+		--from-literal git-token=$$GIT_TOKEN
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
 		app-sets/cluster-resources/argocd \
 		| kubectl -n argocd apply -f -; \
