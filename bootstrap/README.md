@@ -6,7 +6,9 @@
 - docker
 - kustomize
 - kubectl
-- carvel kapp
+- kapp
+  - `brew tap vmware-tanzu/carvel`
+  - `brew install kapp`
 
 ## Quick Start
 
@@ -24,6 +26,7 @@ make cluster
 # After that, the cluster self-manages via ./app-sets/cluster-resources
 
 make bootstrap-argocd
+
 ```
 
 That's it. Everything else happens all on its own
