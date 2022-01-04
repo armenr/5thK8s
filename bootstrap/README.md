@@ -6,9 +6,11 @@
 - docker
 - kustomize
 - kubectl
+- carvel kapp
 
 ## Quick Start
-```
+
+```bash
 export GIT_TOKEN=<YOUR AWSOME TOKEN>
 export GITHUB_USER=<YOUR AWESOME USERNAME>
 
@@ -22,7 +24,6 @@ make cluster
 # After that, the cluster self-manages via ./app-sets/cluster-resources
 
 make bootstrap-argocd
-
 ```
 
 That's it. Everything else happens all on its own

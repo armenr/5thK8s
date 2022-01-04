@@ -1,6 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
   creationTimestamp: null
   labels:
     app.kubernetes.io/managed-by: argocd-autopilot
