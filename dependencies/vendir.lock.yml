@@ -11,11 +11,11 @@ directories:
 - contents:
   - helmChart:
       appVersion: 2.2.2
-      version: 2.0.20
+      version: 2.1.0
     path: helm-chart
   - git:
-      commitTitle: Bump version to 2.2.1
-      sha: 122ecefc3abfe8b691a08d9f3cecf9a170cc8c37
+      commitTitle: 'docs: update roadmap document with v2.2 release changes (#8089)...'
+      sha: 06dc9aa8363ea69b374c5157e48a8c968928b20b
       tags:
       - stable
     path: vendor-manifests
@@ -49,7 +49,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: v1.1.0
-      version: 2.7.0
+      version: 2.8.0
     path: helm-chart
   path: argo-rollouts/synced
 - contents:
@@ -61,19 +61,19 @@ directories:
 - contents:
   - helmChart:
       appVersion: 6.2.6
-      version: 15.6.10
+      version: 15.7.0
     path: helm-chart
   path: redis/synced
 - contents:
   - helmChart:
       appVersion: 3.9.11
-      version: 8.24.13
+      version: 8.25.0
     path: helm-chart
   path: rabbitmq/synced
 - contents:
   - helmChart:
       appVersion: 10.5.13
-      version: 10.2.0
+      version: 10.3.0
     path: helm-chart
   path: mariadb/synced
 - contents:
@@ -91,13 +91,13 @@ directories:
 - contents:
   - helmChart:
       appVersion: 2.3.0
-      version: 2.1.19
+      version: 2.2.0
     path: helm-chart
   path: kube-state-metrics/synced
 - contents:
   - helmChart:
-      appVersion: 1.88.1
-      version: 1.88.1
+      appVersion: 1.89.1
+      version: 1.89.1
     path: helm-chart
   path: cost-analyzer/synced
 - contents:
@@ -108,8 +108,8 @@ directories:
   path: sealed-secrets/synced
 - contents:
   - helmChart:
-      appVersion: 1.5.1
-      version: 1.5.1
+      appVersion: 1.6.0
+      version: 1.6.0
     path: helm-chart
   path: crossplane/synced
 kind: LockConfig
