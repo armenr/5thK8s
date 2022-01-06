@@ -24,7 +24,10 @@ define chdir
 endef
 
 cluster:
-	k3d cluster create local-$(USER) --config ./assets/k3d_local.yaml --wait
+	k3d cluster create local-$(shell whoami) --config ./assets/k3d_local.yaml --wait
+
+argocd-namespace:
+	kubectl create namespace argocd
 
 bootstrap-argocd:
 	echo "Mandatory pause while cluster boots up..."
@@ -37,15 +40,6 @@ bootstrap-argocd:
 	sleep 30;
 	kubectl wait --for=condition=available --timeout=360s --all deployments --all-namespaces;
 	$(MAKE) crossplane-aws-sealed-secret
-
-remove-argocd:
-	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		app-sets/cluster-resources/argocd \
-		| kubectl -n argocd delete -f -;
-	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		app-sets/cluster-resources/argocd-applicationset \
-		| kubectl -n argocd delete -f -;
-	kubectl delete namespace argocd
 
 install-argocd:
 	kubectl -n argocd create secret generic \
@@ -64,8 +58,15 @@ install-argocd:
 			--all deployments \
 			--all-namespaces;
 
-argocd-namespace:
-	kubectl create namespace argocd
+remove-argocd:
+	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
+		app-sets/cluster-resources/argocd \
+		| kubectl -n argocd delete -f -;
+	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
+		app-sets/cluster-resources/argocd-applicationset \
+		| kubectl -n argocd delete -f -;
+	kubectl delete namespace argocd
+
 
 install-cluster-resources:
 	kubectl create -n argocd -f bootstrap/apps/appset-cluster-resources.yaml;
@@ -87,6 +88,12 @@ crossplane-aws-sealed-secret:
 		--namespace crossplane-system \
     | tee crossplane-assets/configs/aws-credentials.yaml
 
+
+destroy-cluster:
+	k3d cluster delete local-$(shell whoami)
+
+
+
 # bootstrap-argocd:
 
 # 	kubectl -n argocd create secret generic \
@@ -104,5 +111,3 @@ crossplane-aws-sealed-secret:
 # 		| kubectl apply -n argocd -f -
 
 # destroy all the things
-destroy-cluster:
-	k3d cluster delete local-$(USER)
