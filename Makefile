@@ -67,7 +67,6 @@ remove-argocd:
 		| kubectl -n argocd delete -f -;
 	kubectl delete namespace argocd
 
-
 install-cluster-resources:
 	kubectl create -n argocd -f bootstrap/apps/appset-cluster-resources.yaml;
 
