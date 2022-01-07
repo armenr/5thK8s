@@ -17,7 +17,5 @@ configMapGenerator:
             name: github-repo-secret
       - |
         resource.compareoptions= ignoreAggregatedRoles: true
-      # - |
-      #   controller.log.level: "warn"
     name: argocd-cm
     namespace: argocd
