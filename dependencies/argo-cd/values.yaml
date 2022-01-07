@@ -2,7 +2,11 @@ config:
   secret:
     argocdServerAdminPassword: BLEEGASTAN123
 
+controller:
+  logLevel: warn
+
 server:
+  logLevel: warn
   insecure: true
   extraArgs:
     - --basehref            ## This is very important
@@ -23,8 +27,8 @@ server:
     - mountPath: /app/config/tls
       name: tls-certs
 
-
 repoServer:
+  logLevel: warn
   # ConfigManagement Plugin sidecar teengz!
   extraVolumes:
     - name: plugin-cmp-kustomize-helm
@@ -51,8 +55,8 @@ repoServer:
         name: var-files
   sidecars:
     - name: cmp
-      command: [/var/run/argocd/argocd-cmp-server] # Entrypoint should be Argo CD lightweight CMP server i.e. argocd-cmp-server
-      image: busybox # This can be off-the-shelf or custom built image
+      command: [/var/run/argocd/argocd-cmp-server]                  # Entrypoint should be Argo CD lightweight CMP server i.e. argocd-cmp-server
+      image: busybox                                                # This can be off-the-shelf or custom built image
       securityContext:
         runAsNonRoot: true
         runAsUser: 999
@@ -61,7 +65,7 @@ repoServer:
           name: var-files
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
-        - mountPath: /home/argocd/cmp-server/config/plugin.yaml # Plugin config file can either be volume mapped or baked into image
+        - mountPath: /home/argocd/cmp-server/config/plugin.yaml     # Plugin config file can either be volume mapped or baked into image
           subPath: plugin.yaml
           name: plugin-cmp-kustomize-helm
         - mountPath: /tmp
