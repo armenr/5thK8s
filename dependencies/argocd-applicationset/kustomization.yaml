@@ -11,3 +11,11 @@ helmCharts:
   namespace: argocd
   includeCRDs: true
   valuesFile: values.yaml
+
+patches:
+  - patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/command/-
+        value: '--log-level=warn'
+    target:
+      kind: Deployment
