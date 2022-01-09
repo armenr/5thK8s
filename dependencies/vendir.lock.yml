@@ -31,7 +31,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 3.2.6
-      version: 0.1.13
+      version: 0.2.0
     path: helm-chart
   path: argo-workflows/synced
 - contents:
@@ -42,8 +42,8 @@ directories:
   path: argocd-notifications/synced
 - contents:
   - helmChart:
-      appVersion: v0.2.0
-      version: 1.7.0
+      appVersion: v0.3.0
+      version: 1.8.0
     path: helm-chart
   path: argocd-applicationset/synced
 - contents:
@@ -61,13 +61,13 @@ directories:
 - contents:
   - helmChart:
       appVersion: 6.2.6
-      version: 15.7.0
+      version: 15.7.1
     path: helm-chart
   path: redis/synced
 - contents:
   - helmChart:
-      appVersion: 3.9.11
-      version: 8.25.0
+      appVersion: 3.9.12
+      version: 8.26.0
     path: helm-chart
   path: rabbitmq/synced
 - contents:
@@ -91,7 +91,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 2.3.0
-      version: 2.2.0
+      version: 2.2.1
     path: helm-chart
   path: kube-state-metrics/synced
 - contents:
@@ -108,8 +108,8 @@ directories:
   path: sealed-secrets/synced
 - contents:
   - helmChart:
-      appVersion: 1.6.0
-      version: 1.6.0
+      appVersion: 1.6.1
+      version: 1.6.1
     path: helm-chart
   path: crossplane/synced
 kind: LockConfig
