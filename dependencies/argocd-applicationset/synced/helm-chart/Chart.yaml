@@ -1,6 +1,6 @@
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Bumped argocd-applicationset to 0.3.0"
+    - "[Added]: Add ingress for webhook, not enabled by default."
 apiVersion: v2
 appVersion: v0.3.0
 description: A Helm chart for installing ArgoCD ApplicationSet
@@ -14,4 +14,4 @@ maintainers:
 - name: maruina
 name: argocd-applicationset
 type: application
-version: 1.8.0
+version: 1.9.0
