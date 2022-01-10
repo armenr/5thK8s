@@ -26,22 +26,33 @@ server:
   extraVolumeMounts:
     - mountPath: /app/config/tls
       name: tls-certs
+  config: |
+    configManagementPlugins: |-
+      - name: bash
+        generate:
+          command:
+          - /bin/bash
+          args:
+          - -ce
+          - ./generate
 
 repoServer:
   logLevel: warn
   # ConfigManagement Plugin sidecar teengz!
   extraVolumes:
-    - name: plugin-cmp-kustomize-helm
-      configMap:
-        name: plugin-cmp-kustomize-helm
-    - emptyDir: {}
-      name: var-files
-    - emptyDir: {}
-      name: plugins
-    - emptyDir: {}
-      name: tmp
-    - emptyDir: {}
-      name: helm-working-dir
+  - name: plugin-cmp-kustomize-helm
+    configMap:
+      name: plugin-cmp-kustomize-helm
+  - emptyDir: {}
+    name: var-files
+  - emptyDir: {}
+    name: plugins
+  - emptyDir: {}
+    name: tmp
+  - emptyDir: {}
+    name: helm-working-dir
+  - name: carvel
+    emptyDir: {}
   initContainers:
     - name: copyutil
       image: quay.io/argoproj/argocd:v2.2.1
@@ -53,6 +64,46 @@ repoServer:
       volumeMounts:
       - mountPath: /var/run/argocd
         name: var-files
+    - name: install-carvel
+      image: docker.io/k14s/image
+      command:
+      - bash
+      - -ce
+      args:
+      - |
+        mv `which ytt` ${K14SIO_INSTALL_BIN_DIR}
+        mv `which kapp` ${K14SIO_INSTALL_BIN_DIR}
+        mv `which kbld` ${K14SIO_INSTALL_BIN_DIR}
+        mv `which kwt` ${K14SIO_INSTALL_BIN_DIR}
+        mv `which imgpkg` ${K14SIO_INSTALL_BIN_DIR}
+        mv `which vendir` ${K14SIO_INSTALL_BIN_DIR}
+        # or if you want to install the latest carvel tools
+        # wget -O- [https://carvel.dev/install.sh](https://carvel.dev/install.sh) | bash
+      env:
+      - name: K14SIO_INSTALL_BIN_DIR
+        value: /carvel
+      volumeMounts:
+      - mountPath: /carvel
+        name: carvel
+  extraVolumeMounts:
+  - mountPath: /usr/local/bin/ytt
+    name: carvel
+    subPath: ytt
+  - mountPath: /usr/local/bin/kapp
+    name: carvel
+    subPath: kapp
+  - mountPath: /usr/local/bin/kbld
+    name: carvel
+    subPath: kbld
+  - mountPath: /usr/local/bin/kwt
+    name: carvel
+    subPath: kwt
+  - mountPath: /usr/local/bin/imgpkg
+    name: carvel
+    subPath: imgpkg
+  - mountPath: /usr/local/bin/vendir
+    name: carvel
+    subPath: vendir
   sidecars:
     - name: cmp
       command: [/var/run/argocd/argocd-cmp-server]                  # Entrypoint should be Argo CD lightweight CMP server i.e. argocd-cmp-server
