@@ -30,15 +30,16 @@ argocd-namespace:
 	kubectl create namespace argocd
 
 bootstrap-argocd:
+	export TZ=UTC
 	echo "Mandatory pause while cluster boots up..."
 	sleep 30;
-	kubectl wait --for=condition=available --timeout=360s --all deployments --all-namespaces;
+	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
 	$(MAKE) argocd-namespace
 	$(MAKE) install-argocd
 	$(MAKE) install-cluster-resources
 	echo "WAITING FOR SEALED SECRETS & STUFF..."
 	sleep 30;
-	kubectl wait --for=condition=available --timeout=360s --all deployments --all-namespaces;
+	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
 	$(MAKE) crossplane-aws-sealed-secret
 
 install-argocd:
