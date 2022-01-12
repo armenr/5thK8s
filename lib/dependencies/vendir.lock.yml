@@ -67,7 +67,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 3.9.12
-      version: 8.26.0
+      version: 8.26.1
     path: helm-chart
   path: rabbitmq/synced
 - contents:
@@ -112,10 +112,22 @@ directories:
       version: 1.6.1
     path: helm-chart
   - git:
-      commitTitle: 'Merge pull request #1029 from haarchri/fix/tgw-tagger...'
-      sha: 688f65f3b213ce0e624673ca38aae96fb1787baa
+      commitTitle: 'Merge pull request #1022 from haarchri/feature/s3-resolvers...'
+      sha: 96a15aa76c5060da9769605acb4a3824ec521d0f
       tags:
-      - v0.23.0-rc.0-55-g688f65f3
+      - v0.24.0-rc.0
     path: examples
   path: crossplane/synced
+- contents:
+  - helmChart:
+      appVersion: 1.1.13
+      version: 1.1.13
+    path: helm-chart
+  path: kubevela/synced
+- contents:
+  - helmChart:
+      appVersion: 2.5.6
+      version: 10.9.1
+    path: helm-chart
+  path: traefik/synced
 kind: LockConfig

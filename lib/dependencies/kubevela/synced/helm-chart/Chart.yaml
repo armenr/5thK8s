@@ -1,0 +1,8 @@
+apiVersion: v2
+appVersion: 1.1.13
+description: A Helm chart for KubeVela core
+home: https://kubevela.io
+icon: https://kubevela.io/img/logo.jpg
+name: vela-core
+type: application
+version: 1.1.13

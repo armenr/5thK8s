@@ -207,11 +207,20 @@ directories:
     - examples/**/*
     newRootPath: examples
 
-  # kubevela
-  - path: kubevela/synced
-    contents:
-      - path: helm-chart
-        helmChart:
-          name: vela-core
-          repository:
-            url: https://charts.kubevela.net/core
+# kubevela
+- path: kubevela/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: vela-core
+      repository:
+        url: https://charts.kubevela.net/core
+
+# traefik
+- path: traefik/synced
+  contents:
+    - path: helm-chart
+      helmChart:
+        name: traefik
+        repository:
+          url: https://helm.traefik.io/traefik
