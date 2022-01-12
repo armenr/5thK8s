@@ -129,3 +129,7 @@ kubectl patch deployment valid-deployment  --type json   -p='[{"op": "remove", "
 # Add a new element to a positional array
 kubectl patch sa default --type='json' -p='[{"op": "add", "path": "/secrets/1", "value": {"name": "whatever" } }]'
 ```
+
+```shell
+kubectl exec -ti -n argocd $(kubectl get pod -n argo-cd -l app.kubernetes.io/component=repo-server -o jsonpath='{.items[0].metadata.name}') -- bash -c "find /usr/local/bin -type f -exec {} version \;"
+```
