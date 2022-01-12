@@ -24,7 +24,7 @@ define chdir
 endef
 
 cluster:
-	k3d cluster create local-$(shell whoami) --config ./assets/k3d_local.yaml --wait
+	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait
 
 argocd-namespace:
 	kubectl create namespace argocd
@@ -48,10 +48,10 @@ install-argocd:
 		--from-literal git_username=$$GITHUB_USER \
 		--from-literal git-token=$$GIT_TOKEN
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		app-sets/cluster-resources/argocd \
+		argocd-app-setscluster-resources/argocd \
 		| kubectl -n argocd apply -f -; \
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		app-sets/cluster-resources/argocd-applicationset \
+		argocd-app-setscluster-resources/argocd-applicationset \
 		| kubectl -n argocd apply -f - \
 		&& kubectl wait \
 			--for=condition=available \
@@ -61,15 +61,15 @@ install-argocd:
 
 remove-argocd:
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		app-sets/cluster-resources/argocd \
+		argocd-app-setscluster-resources/argocd \
 		| kubectl -n argocd delete -f -;
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		app-sets/cluster-resources/argocd-applicationset \
+		argocd-app-setscluster-resources/argocd-applicationset \
 		| kubectl -n argocd delete -f -;
 	kubectl delete namespace argocd
 
 install-cluster-resources:
-	kubectl create -n argocd -f bootstrap/apps/appset-cluster-resources.yaml;
+	kubectl create -n argocd -f lib/bootstrap/apps/appset-cluster-resources.yaml;
 
 crossplane-aws-sealed-secret:
 	echo \
@@ -86,7 +86,7 @@ crossplane-aws-sealed-secret:
 		--controller-namespace sealed-secrets \
 		--controller-name sealed-secrets \
 		--namespace crossplane-system \
-    | tee crossplane-assets/configs/aws-credentials.yaml
+    | tee lib/crossplane-assets/configs/aws-credentials.yaml
 
 
 destroy-cluster:
@@ -101,13 +101,13 @@ destroy-cluster:
 # 		--from-literal git_username=$GITHUB_USER \
 # 		--from-literal git-token=$GIT_TOKEN
 # 	kustomize build \
-# 		dependencies/argo-cd \
-# 		> bootstrap/argo-cd/argo-cd.base.yaml
+# 		lib/dependencies/argo-cd \
+# 		> lib/bootstrap/argo-cd/argo-cd.base.yaml
 # 	kustomize build --enable-helm \
-# 		dependencies/argocd-applicationset \
-# 		> bootstrap/argo-cd/argocd-applicationsets.base.yaml
+# 		lib/dependencies/argocd-applicationset \
+# 		> lib/bootstrap/argo-cd/argocd-applicationsets.base.yaml
 # 	kustomize build \
-# 		bootstrap/argo-cd \
+# 		lib/bootstrap/argo-cd \
 # 		| kubectl apply -n argocd -f -
 
 # destroy all the things

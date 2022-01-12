@@ -3,10 +3,11 @@
 **/*/*.log
 **/**/.DS_STORE
 **/**/token.yaml
-dependencies/**/*.yaml.generated
+lib/dependencies/**/*.yaml.generated
 **/.vendir-tmp
 *-old
 redis-password.txt
 .sliced
 sliced
 *-creds.*
+.idea

@@ -1,0 +1,8 @@
+---
+apiVersion: iam.aws.crossplane.io/v1beta1
+kind: Group
+metadata:
+  name: somegroup
+spec:
+  providerConfigRef:
+    name: example

@@ -1,6 +1,6 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
-    "editor.fontFamily": "Cascadia Code",
+    "editor.fontFamily": "Hack",
     "editor.fontWeight": "350",
     "editor.fontLigatures": true,
     "terminal.integrated.fontFamily": "Source Code Pro for Powerline",

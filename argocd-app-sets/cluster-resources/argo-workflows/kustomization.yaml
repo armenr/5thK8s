@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../../lib/dependencies/argo-workflows/synced/
+
+helmCharts:
+  - includeCRDs: true
+    name: helm-chart
+    namespace: argo
+    releaseName: argo-workflows
+    valuesFile: ../../../lib/dependencies/argo-workflows/values.yaml
+
+resources:
+  - ../../../lib/dependencies/argo-workflows/patches/traefik-middleware.yaml

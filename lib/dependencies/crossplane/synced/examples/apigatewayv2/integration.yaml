@@ -1,0 +1,13 @@
+apiVersion: apigatewayv2.aws.crossplane.io/v1alpha1
+kind: Integration
+metadata:
+  name: test-integration
+spec:
+  forProvider:
+    apiIdRef:
+      name: test-ws-api
+    region: us-east-1
+    integrationType: MOCK
+    payloadFormatVersion: "1.0"
+  providerConfigRef:
+    name: example

@@ -1,0 +1,13 @@
+apiVersion: redshift.aws.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  name: sample-cluster
+spec:
+  forProvider:
+    region: us-east-1
+    nodeType: dc2.large
+    masterUsername: testing
+    clusterType: single-node
+    skipFinalClusterSnapshot: true
+  providerConfigRef:
+    name: example

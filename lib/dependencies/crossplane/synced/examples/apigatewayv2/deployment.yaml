@@ -1,0 +1,13 @@
+apiVersion: apigatewayv2.aws.crossplane.io/v1alpha1
+kind: Deployment
+metadata:
+  name: test-deployment
+spec:
+  forProvider:
+    apiIdRef:
+      name: test-ws-api
+    stageNameRef:
+      name: test-stage
+    region: us-east-1
+  providerConfigRef:
+    name: example

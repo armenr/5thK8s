@@ -1,0 +1,21 @@
+apiVersion: elasticloadbalancing.aws.crossplane.io/v1alpha1
+kind: ELB
+metadata:
+  name: sample-elb
+spec:
+  forProvider:
+    region: us-east-1
+    securityGroupIdRefs:
+      - name: sample-cluster-sg
+    subnetIdRefs:
+      - name: sample-subnet1
+    listeners:
+      - instancePort: 8180
+        instanceProtocol: http
+        loadBalancerPort: 8180
+        protocol: http
+    tags:
+      - key: k1
+        value: v1
+  providerConfigRef:
+    name: example

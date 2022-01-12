@@ -1,0 +1,14 @@
+---
+apiVersion: iam.aws.crossplane.io/v1beta1
+kind: UserPolicyAttachment
+metadata:
+  name: sample-userpolicyattachment
+spec:
+  forProvider:
+    # policyArn: arn:aws:iam::aws:policy/AmazonEC2FullAccess
+    policyArnRef:
+      name: somepolicy
+    userNameRef:
+      name: someuser
+  providerConfigRef:
+    name: example

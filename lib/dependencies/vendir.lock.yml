@@ -1,0 +1,121 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - helmChart:
+      appVersion: v1.6.1
+      version: v1.6.1
+    path: helm-chart
+  - http: {}
+    path: crds
+  path: cert-manager/synced
+- contents:
+  - helmChart:
+      appVersion: 2.2.2
+      version: 2.1.1
+    path: helm-chart
+  - git:
+      commitTitle: 'docs: update roadmap document with v2.2 release changes (#8089)...'
+      sha: 06dc9aa8363ea69b374c5157e48a8c968928b20b
+      tags:
+      - stable
+    path: vendor-manifests
+  - git:
+      commitTitle: 'docs: update installation instructions...'
+      sha: 94e41261793f27c51de38f5c5544b1bb05a9e2e5
+    path: argocd-extensions
+  - git:
+      commitTitle: 'refactor: update argo-ui version...'
+      sha: c756b99e0c2ca43669c52835d9f948b116870330
+    path: extension-ui-rollouts
+  path: argo-cd/synced/
+- contents:
+  - helmChart:
+      appVersion: 3.2.6
+      version: 0.2.0
+    path: helm-chart
+  path: argo-workflows/synced
+- contents:
+  - helmChart:
+      appVersion: v1.2.1
+      version: 1.7.0
+    path: helm-chart
+  path: argocd-notifications/synced
+- contents:
+  - helmChart:
+      appVersion: v0.3.0
+      version: 1.9.0
+    path: helm-chart
+  path: argocd-applicationset/synced
+- contents:
+  - helmChart:
+      appVersion: v1.1.1
+      version: 2.9.1
+    path: helm-chart
+  path: argo-rollouts/synced
+- contents:
+  - helmChart:
+      appVersion: v1.5.0
+      version: 1.9.0
+    path: helm-chart
+  path: argo-events/synced
+- contents:
+  - helmChart:
+      appVersion: 6.2.6
+      version: 15.7.4
+    path: helm-chart
+  path: redis/synced
+- contents:
+  - helmChart:
+      appVersion: 3.9.12
+      version: 8.26.0
+    path: helm-chart
+  path: rabbitmq/synced
+- contents:
+  - helmChart:
+      appVersion: 10.5.13
+      version: 10.3.0
+    path: helm-chart
+  path: mariadb/synced
+- contents:
+  - helmChart:
+      appVersion: 0.5.2
+      version: 5.10.13
+    path: helm-chart
+  path: metrics-server/synced
+- contents:
+  - helmChart:
+      appVersion: 0.1.0
+      version: 3.2.22
+    path: helm-chart
+  path: kubewatch/synced
+- contents:
+  - helmChart:
+      appVersion: 2.3.0
+      version: 2.2.2
+    path: helm-chart
+  path: kube-state-metrics/synced
+- contents:
+  - helmChart:
+      appVersion: 1.89.1
+      version: 1.89.1
+    path: helm-chart
+  path: cost-analyzer/synced
+- contents:
+  - helmChart:
+      appVersion: v0.17.1
+      version: 2.0.2
+    path: helm-chart
+  path: sealed-secrets/synced
+- contents:
+  - helmChart:
+      appVersion: 1.6.1
+      version: 1.6.1
+    path: helm-chart
+  - git:
+      commitTitle: 'Merge pull request #1029 from haarchri/fix/tgw-tagger...'
+      sha: 688f65f3b213ce0e624673ca38aae96fb1787baa
+      tags:
+      - v0.23.0-rc.0-55-g688f65f3
+    path: examples
+  path: crossplane/synced
+kind: LockConfig

@@ -1,0 +1,14 @@
+---
+apiVersion: iam.aws.crossplane.io/v1beta1
+kind: AccessKey
+metadata:
+  name: test-accesskey
+spec:
+  forProvider:
+    userNameRef:
+      name: someuser
+  providerConfigRef:
+    name: example
+  writeConnectionSecretToRef:
+    name: access-key-secret
+    namespace: default

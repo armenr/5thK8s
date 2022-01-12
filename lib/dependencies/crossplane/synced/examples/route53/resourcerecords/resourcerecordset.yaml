@@ -1,0 +1,15 @@
+---
+apiVersion: route53.aws.crossplane.io/v1alpha1
+kind: ResourceRecordSet
+metadata:
+  name: dev.crossplane.io
+spec:
+  providerConfigRef:
+    name: example
+  forProvider:
+    type: A
+    ttl: 300
+    resourceRecords:
+    - value: "11.11.12.12"
+    zoneIdRef:
+      name: crossplane.io

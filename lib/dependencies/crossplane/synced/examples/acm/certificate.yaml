@@ -1,0 +1,16 @@
+apiVersion: acm.aws.crossplane.io/v1beta1
+kind: Certificate
+metadata:
+  name: private-cert
+spec:
+  forProvider:
+    region: us-east-1
+    certificateAuthorityARNRef:
+      name: example
+    domainName: dev.crossplane.io
+    certificateTransparencyLoggingPreference: DISABLED
+    tags:
+    - key: Name
+      value: example
+  providerConfigRef:
+    name: example

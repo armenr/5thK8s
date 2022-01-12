@@ -1,0 +1,217 @@
+##!!! WARNING: Any changes or new files to ANY vendir-managed directory or path  #
+##!!!          will be overwritten or destroyed on the next `vendir sync`        #
+##!!!#############################################################################
+
+apiVersion: vendir.k14s.io/v1alpha1
+kind: Config
+minimumRequiredVersion: 0.18.0
+
+directories:
+
+# Cert-Manager
+- path: cert-manager/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: cert-manager
+      repository:
+        url: https://charts.jetstack.io
+    # version: 1.6.1
+
+  - path: crds
+    http:
+      url: https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
+
+# Argo-CD Synced assets
+- path: argo-cd/synced/
+  contents:
+
+  - path: helm-chart
+    helmChart:
+      name: argo-cd
+      repository:
+        url: https://charts.bitnami.com/bitnami
+
+  - path: vendor-manifests
+    git:
+      url: https://github.com/argoproj/argo-cd/
+      # branch, tag, commit; origin is the name of the remote (required)
+      # optional if refSelection is specified (available in v0.11.0+)
+      ref: stable
+    includePaths:
+    - manifests/**/*
+    newRootPath: manifests
+
+  - path: argocd-extensions
+    git:
+      url: https://github.com/argoproj-labs/argocd-extensions
+      ref: origin/main
+    includePaths:
+      - manifests/**/*
+
+  - path: extension-ui-rollouts
+    git:
+      url: https://github.com/argoproj-labs/rollout-extension
+      # branch, tag, commit; origin is the name of the remote (required)
+      # optional if refSelection is specified (available in v0.11.0+)
+      ref: origin/master
+    includePaths:
+    - manifests/**/*
+
+# Argo Workflows
+- path: argo-workflows/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: argo-workflows
+      repository:
+        url: https://charts.bitnami.com/bitnami
+    # version: 1.6.1
+
+# Argo-CD notifications
+- path: argocd-notifications/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: argocd-notifications
+      repository:
+        url: https://argoproj.github.io/argo-helm
+    # version: 1.6.1
+
+# Argo-CD ApplicationSets
+- path: argocd-applicationset/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: argocd-applicationset
+      repository:
+        url: https://argoproj.github.io/argo-helm
+    # version: 1.6.1
+
+# Argo Rollouts
+- path: argo-rollouts/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: argo-rollouts
+      repository:
+        url: https://argoproj.github.io/argo-helm
+    # version: 1.6.1
+
+# Argo Events
+- path: argo-events/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: argo-events
+      repository:
+        url: https://argoproj.github.io/argo-helm
+    # version: 1.6.1
+
+# Redis
+- path: redis/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: redis
+      repository:
+        url: https://charts.bitnami.com/bitnami
+    # version: 1.6.1
+
+# RabbitMQ
+- path: rabbitmq/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: rabbitmq
+      repository:
+        url: https://charts.bitnami.com/bitnami
+    # version: 1.6.1
+
+# MariaDB
+- path: mariadb/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: mariadb
+      repository:
+        url: https://charts.bitnami.com/bitnami
+    # version: 1.6.1
+
+# metrics-server
+- path: metrics-server/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: metrics-server
+      repository:
+        url: https://charts.bitnami.com/bitnami
+    # version: 1.6.1
+
+# kube-watch
+- path: kubewatch/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: kubewatch
+      repository:
+        url: https://charts.bitnami.com/bitnami
+    # version: 1.6.1
+
+# kube-state-metrics
+- path: kube-state-metrics/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: kube-state-metrics
+      repository:
+        url: https://charts.bitnami.com/bitnami
+    # version: 1.6.1
+
+# cost-analyzer
+- path: cost-analyzer/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: cost-analyzer
+      repository:
+        url: https://kubecost.github.io/cost-analyzer/
+    # version: 1.6.1
+
+# sealed-secrets
+- path: sealed-secrets/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: sealed-secrets
+      repository:
+        url: https://bitnami-labs.github.io/sealed-secrets
+
+# crossplane
+- path: crossplane/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: crossplane
+      repository:
+        url: https://charts.crossplane.io/stable
+    # version: 1.6.1
+
+  - path: examples
+    git:
+      url: https://github.com/crossplane/provider-aws
+      # branch, tag, commit; origin is the name of the remote (required)
+      # optional if refSelection is specified (available in v0.11.0+)
+      ref: origin/master
+    includePaths:
+    - examples/**/*
+    newRootPath: examples
+
+  # kubevela
+  - path: kubevela/synced
+    contents:
+      - path: helm-chart
+        helmChart:
+          name: vela-core
+          repository:
+            url: https://charts.kubevela.net/core
