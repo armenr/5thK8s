@@ -1,6 +1,6 @@
 ##!!! WARNING: Any changes or new files to ANY vendir-managed directory or path  #
-##             will be overwritten or destroyed on the next `vendir sync`        #
-##################################################################################
+##!!!          will be overwritten or destroyed on the next `vendir sync`        #
+##!!!#############################################################################
 
 apiVersion: vendir.k14s.io/v1alpha1
 kind: Config
