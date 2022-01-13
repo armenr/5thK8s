@@ -1,0 +1,30 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: plugin-cmp-carvel
+#   namespace: argocd
+# data:
+#   plugin.yaml: |
+#     apiVersion: argoproj.io/v1alpha1
+#     kind: ConfigManagementPlugin
+#     metadata:
+#       name: plugin-cmp-carvel
+#     spec:
+#       version: v1.0
+#       generate:
+#         command: [/bin/bash, -ce]
+#         args: ["helm template --release-name release-name . > all.yaml && kustomize build"]
+#       discover:
+#         fileName: "./subdir/s*.yaml"
+#       allowConcurrency: true
+
+
+  # config: |
+  #   configManagementPlugins: |-
+  #     - name: bash
+  #       generate:
+  #         command:
+  #         - /bin/bash
+  #         args:
+  #         - -ce
+  #         - ./generate

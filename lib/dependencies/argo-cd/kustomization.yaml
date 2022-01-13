@@ -6,9 +6,9 @@ helmGlobals:
   chartHome: synced/
 
 helmCharts:
-- name: helm-chart            # this is the directory within /synced...
+- name: helm-chart
   namespace: argocd
-  releaseName: argo-cd        # this is what you want to name your deployment
+  releaseName: argo-cd
   valuesFile: values.yaml
   includeCRDs: true
 
@@ -24,7 +24,7 @@ resources:
 - synced/vendor-manifests/cluster-rbac
 - patches/traefik-middleware.yaml
 - patches/config-map-tls.yaml
-- plugin-cmp-kustomize-helm.yaml
+# - patches/plugin-cmp-kustomize-helm.yaml
 
 # components:
 #   - synced/argocd-extensions/manifests
