@@ -27,12 +27,8 @@ endef
 cluster:
 	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
 	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
-	sleep 20
-	kubectl wait \
-			--for=condition=available \
-			--timeout=360s \
-			--all deployments \
-			--all-namespaces;
+	sleep 60
+	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
 
 argocd-namespace:
 	kubectl create namespace argocd
