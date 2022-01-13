@@ -15,6 +15,7 @@
 CHDIR_SHELL := $(SHELL)
 AWS_ACCESS_KEY_ID := $(aws configure get default.aws_access_key_id)
 AWS_SECRET_ACCESS_KEY := $(aws configure get default.aws_secret_access_key)
+AWS_CREDS := $(echo -e "[default]\naws_access_key_id = $(aws configure get aws_access_key_id)\naws_secret_access_key = $(aws configure get aws_secret_access_key)")
 CLUSTER_ID := $(whoami)
 EXISTING_NAMESPACES := $(shell kubectl get ns --show-labels | sed 1,1d | cut -d ' ' -f1)
 
@@ -24,61 +25,85 @@ define chdir
 endef
 
 cluster:
-	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait
-
-argocd-namespace:
-	kubectl create namespace argocd
-
-bootstrap-argocd:
-	export TZ=UTC
-	echo "Mandatory pause while cluster boots up..."
-	sleep 30;
+	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
 	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
-	$(MAKE) argocd-namespace
-	$(MAKE) install-argocd
-	$(MAKE) install-cluster-resources
-	echo "WAITING FOR SEALED SECRETS & STUFF..."
-	sleep 30;
-	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
-	$(MAKE) crossplane-aws-sealed-secret
-
-install-argocd:
-	kubectl -n argocd create secret generic \
-		github-repo-secret \
-		--from-literal git_username=$$GITHUB_USER \
-		--from-literal git-token=$$GIT_TOKEN
-	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		argocd-app-setscluster-resources/argocd \
-		| kubectl -n argocd apply -f -; \
-	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		argocd-app-setscluster-resources/argocd-applicationset \
-		| kubectl -n argocd apply -f - \
-		&& kubectl wait \
+	sleep 20
+	kubectl wait \
 			--for=condition=available \
 			--timeout=360s \
 			--all deployments \
 			--all-namespaces;
 
-remove-argocd:
+argocd-namespace:
+	kubectl create namespace argocd
+
+sealed-secrets-namespace:
+	kubectl create namespace sealed-secrets
+
+crossplane-namespace:
+	kubectl create namespace crossplane-system
+
+bootstrap-argocd:
+	export TZ=UTC
+	$(MAKE) argocd-namespace
+	$(MAKE) crossplane-namespace
+	$(MAKE) sealed-secrets-namespace
+	$(MAKE) github-credentials
+	$(MAKE) install-argocd
+	$(MAKE) install-argocd-applicationset
+	$(MAKE) install-cluster-resources
+	sleep 40
+	$(MAKE) crossplane-aws-sealed-secret
+
+github-credentials:
+	kubectl -n argocd create secret generic \
+		github-repo-secret \
+		--from-literal git_username=$$GITHUB_USER \
+		--from-literal git-token=$$GIT_TOKEN
+
+install-argocd:
+	export TZ=UTC
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		argocd-app-setscluster-resources/argocd \
-		| kubectl -n argocd delete -f -;
+		argocd-app-sets/cluster-resources/argocd \
+		| kubectl -n argocd apply -f - \
+		&& kubectl wait \
+			--for=condition=available \
+			--timeout=360s \
+			--all deployments \
+			--all-namespaces
+
+install-argocd-applicationset:
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
-		argocd-app-setscluster-resources/argocd-applicationset \
-		| kubectl -n argocd delete -f -;
-	kubectl delete namespace argocd
+		argocd-app-sets/cluster-resources/argocd-applicationset \
+		| kubectl -n argocd apply -f -
+	kubectl wait \
+			--for=condition=available \
+			--timeout=360s \
+			--all deployments \
+			--all-namespaces;
 
 install-cluster-resources:
 	kubectl create -n argocd -f lib/bootstrap/apps/appset-cluster-resources.yaml;
+	kubectl wait \
+		--for=condition=available \
+		--timeout=360s \
+		--all deployments \
+		--all-namespaces;
+
+remove-argocd:
+	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
+		argocd-app-sets/cluster-resources/argocd \
+		| kubectl -n argocd delete -f -;
+	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
+		argocd-app-sets/cluster-resources/argocd-applicationset \
+		| kubectl -n argocd delete -f -;
+	kubectl delete namespace argocd
 
 crossplane-aws-sealed-secret:
-	echo \
-		"[default] \
-		aws_access_key_id = $$(aws configure get default.aws_access_key_id) \
-		aws_secret_access_key = $$(aws configure get default.aws_secret_access_key) \
-		" \
-	| kubectl create secret generic aws-credentials \
-		--from-file aws-credentials=./aws-creds.cfg \
+	echo "[default]\naws_access_key_id = $$(aws configure get aws_access_key_id)\naws_secret_access_key = $$(aws configure get aws_secret_access_key)" \
+	| \
+	kubectl create secret generic aws-credentials \
+		--from-file=aws-credentials=/dev/stdin\
 		--output json \
 		--dry-run=client \
     | kubeseal \
@@ -88,10 +113,8 @@ crossplane-aws-sealed-secret:
 		--namespace crossplane-system \
     | tee lib/crossplane-assets/configs/aws-credentials.yaml
 
-
 destroy-cluster:
 	k3d cluster delete local-$(shell whoami)
-
 
 
 # bootstrap-argocd:
