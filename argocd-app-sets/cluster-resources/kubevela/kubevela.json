@@ -1,0 +1,6 @@
+{
+  "name": "kubevela",
+  "namespace": "vela-system",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": true
+}
