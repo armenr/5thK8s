@@ -1,0 +1,72 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+
+metadata:
+  name: cluster-aws
+  labels:
+    provider: aws
+    cluster: eks
+
+spec:
+  writeConnectionSecretsToNamespace: crossplane-system
+  compositeTypeRef:
+    apiVersion: 5k-core.io/v1alpha1
+    kind: CompositeCluster
+  patchSets:
+  - name: metadata
+    patches:
+    - fromFieldPath: metadata.labels
+
+  # EKS CLUSTER
+  resources:
+  - name: ekscluster
+    base:
+      apiVersion: eks.aws.crossplane.io/v1beta1
+      kind: Cluster
+      spec:
+        forProvider:
+          region: us-west-2
+          version: "1.21.2"
+          roleArnSelector:
+            matchControllerRef: true
+            matchLabels:
+              role: controlplane
+          resourcesVpcConfig:
+            endpointPrivateAccess: true
+            endpointPublicAccess: true
+            subnetIdSelector:
+              matchControllerRef: true
+
+  # EKS CLUSTER PATCHES
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+
+    - fromFieldPath: spec.parameters.version
+      toFieldPath: spec.forProvider.version
+
+    - fromFieldPath: metadata.uid
+      toFieldPath: spec.writeConnectionSecretToRef.name
+      transforms:
+        - type: string
+          string:
+            fmt: "%s-ekscluster"
+
+    - type: ToCompositeFieldPath
+      fromFieldPath: spec.id
+      toFieldPath: status.clusterName
+
+    - type: ToCompositeFieldPath
+      fromFieldPath: status.atProvider.status
+      toFieldPath: status.controlPlaneStatus
+
+    - fromFieldPath: spec.writeConnectionSecretToRef.namespace
+      toFieldPath: spec.writeConnectionSecretToRef.namespace
+    readinessChecks:
+
+    - type: MatchString
+      fieldPath: status.atProvider.status
+      matchString: ACTIVE
+    connectionDetails:
+      - fromConnectionSecretKey: kubeconfig
+

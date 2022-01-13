@@ -7,13 +7,15 @@ metadata:
     cluster: eks
 spec:
   compositeTypeRef:
-    apiVersion: devopstoolkitseries.com/v1alpha1
+    apiVersion: 5k-core.io/v1alpha1
     kind: CompositeCluster
   writeConnectionSecretsToNamespace: crossplane-system
   patchSets:
   - name: metadata
     patches:
     - fromFieldPath: metadata.labels
+
+  # EKS CLUSTER
   resources:
   - name: ekscluster
     base:
@@ -21,8 +23,8 @@ spec:
       kind: Cluster
       spec:
         forProvider:
-          region: us-east-1
-          version: "1.21"
+          region: us-west-2
+          version: "1.21.2"
           roleArnSelector:
             matchControllerRef: true
             matchLabels:
@@ -32,6 +34,7 @@ spec:
             endpointPublicAccess: true
             subnetIdSelector:
               matchControllerRef: true
+
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
@@ -57,13 +60,15 @@ spec:
       matchString: ACTIVE
     connectionDetails:
       - fromConnectionSecretKey: kubeconfig
+
+  # EKS NodeGroup
   - name: eksnodegroup
     base:
       apiVersion: eks.aws.crossplane.io/v1alpha1
       kind: NodeGroup
       spec:
         forProvider:
-          region: us-east-1
+          region: us-west-2
           clusterNameSelector:
             matchControllerRef: true
           nodeRoleSelector:
@@ -101,6 +106,7 @@ spec:
     - type: MatchString
       fieldPath: status.atProvider.status
       matchString: ACTIVE
+
   - name: iamrole-controlplane
     base:
       apiVersion: identity.aws.crossplane.io/v1beta1
@@ -134,6 +140,7 @@ spec:
         - type: string
           string:
             fmt: "%s-controlplane"
+
   - name: iamrole-nodegroup
     base:
       apiVersion: identity.aws.crossplane.io/v1beta1
@@ -167,6 +174,7 @@ spec:
         - type: string
           string:
             fmt: "%s-nodegroup"
+
   - name: iamattachment-controlplane
     base:
       apiVersion: identity.aws.crossplane.io/v1beta1
@@ -185,6 +193,7 @@ spec:
         - type: string
           string:
             fmt: "%s-controlplane"
+
   - name: iamattachment-service
     base:
       apiVersion: identity.aws.crossplane.io/v1beta1
@@ -203,6 +212,7 @@ spec:
         - type: string
           string:
             fmt: "%s-service"
+
   - name: iamattachment-worker
     base:
       apiVersion: identity.aws.crossplane.io/v1beta1
@@ -221,6 +231,7 @@ spec:
         - type: string
           string:
             fmt: "%s-worker"
+
   - name: iamattachment-cni
     base:
       apiVersion: identity.aws.crossplane.io/v1beta1
@@ -239,6 +250,7 @@ spec:
         - type: string
           string:
             fmt: "%s-cni"
+
   - name: iamattachment-registry
     base:
       apiVersion: identity.aws.crossplane.io/v1beta1
@@ -257,18 +269,20 @@ spec:
         - type: string
           string:
             fmt: "%s-registry"
+
   - name: vpc-nodepool
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
       kind: VPC
       spec:
         forProvider:
-          region: us-east-1
+          region: us-west-2
           cidrBlock: 10.0.0.0/16
           enableDnsSupport: true
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
+
   - name: sc-nodepool
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
@@ -277,7 +291,7 @@ spec:
         forProvider:
           description: Cluster communication with worker nodes
           groupName: devops-catalog
-          region: us-east-1
+          region: us-west-2
           vpcIdSelector:
             matchControllerRef: true
           egress:
@@ -289,18 +303,19 @@ spec:
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
+
   - name: subnet-nodepool-1a
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
       kind: Subnet
       metadata:
         labels:
-          zone: us-east-1a
+          zone: us-west-2a
           access: public
       spec:
         forProvider:
-          region: us-east-1
-          availabilityZone: us-east-1a
+          region: us-west-2
+          availabilityZone: us-west-2a
           cidrBlock: 10.0.0.0/24
           vpcIdSelector:
             matchControllerRef: true
@@ -315,18 +330,19 @@ spec:
         - type: string
           string:
             fmt: "%s-1a"
+
   - name: subnet-nodepool-1b
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
       kind: Subnet
       metadata:
         labels:
-          zone: us-east-1b
+          zone: us-west-2b
           access: public
       spec:
         forProvider:
-          region: us-east-1
-          availabilityZone: us-east-1b
+          region: us-west-2
+          availabilityZone: us-west-2b
           cidrBlock: 10.0.1.0/24
           vpcIdSelector:
             matchControllerRef: true
@@ -341,18 +357,19 @@ spec:
         - type: string
           string:
             fmt: "%s-1b"
+
   - name: subnet-nodepool-1c
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
       kind: Subnet
       metadata:
         labels:
-          zone: us-east-1c
+          zone: us-west-2c
           access: public
       spec:
         forProvider:
-          region: us-east-1
-          availabilityZone: us-east-1c
+          region: us-west-2
+          availabilityZone: us-west-2c
           cidrBlock: 10.0.2.0/24
           vpcIdSelector:
             matchControllerRef: true
@@ -360,6 +377,7 @@ spec:
           tags:
           - key: kubernetes.io/role/elb
             value: "1"
+
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
@@ -367,25 +385,27 @@ spec:
         - type: string
           string:
             fmt: "%s-1c"
+
   - name: gateway
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
       kind: InternetGateway
       spec:
         forProvider:
-          region: us-east-1
+          region: us-west-2
           vpcIdSelector:
             matchControllerRef: true
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
+
   - name: routetable
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
       kind: RouteTable
       spec:
         forProvider:
-          region: us-east-1
+          region: us-west-2
           vpcIdSelector:
             matchControllerRef: true
           routes:
@@ -396,21 +416,22 @@ spec:
             - subnetIdSelector:
                 matchControllerRef: true
                 matchLabels:
-                  zone: us-east-1a
+                  zone: us-west-2a
                   access: public
             - subnetIdSelector:
                 matchControllerRef: true
                 matchLabels:
-                  zone: us-east-1b
+                  zone: us-west-2b
                   access: public
             - subnetIdSelector:
                 matchControllerRef: true
                 matchLabels:
-                  zone: us-east-1c
+                  zone: us-west-2c
                   access: public
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
+
   - name: helm
     base:
       apiVersion: helm.crossplane.io/v1beta1
@@ -433,6 +454,7 @@ spec:
             fmt: "%s-ekscluster"
     readinessChecks:
       - type: None
+
   - name: kubevela
     base:
       apiVersion: helm.crossplane.io/v1beta1
