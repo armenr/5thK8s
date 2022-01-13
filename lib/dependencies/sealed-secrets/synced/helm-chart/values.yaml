@@ -29,7 +29,7 @@ extraDeploy: []
 image:
   registry: quay.io
   repository: bitnami/sealed-secrets-controller
-  tag: v0.17.1
+  tag: v0.17.2
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -100,6 +100,10 @@ nodeSelector: {}
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
 tolerations: []
+
+## @param updateStatus Specifies whether the Sealed Secrets controller should update the status subresource
+##
+updateStatus: true
 
 ## @section Traffic Exposure Parameters
 
@@ -258,6 +262,12 @@ metrics:
     ## @param metrics.serviceMonitor.namespace Namespace where Prometheus Operator is running in
     ##
     namespace: ""
+    ## @param metrics.serviceMonitor.labels Extra labels for the ServiceMonitor
+    ##
+    labels: {}
+    ## @param metrics.serviceMonitor.annotations Extra annotations for the ServiceMonitor
+    ##
+    annotations: {}
     ## @param metrics.serviceMonitor.interval How frequently to scrape metrics
     ## e.g:
     ## interval: 10s
