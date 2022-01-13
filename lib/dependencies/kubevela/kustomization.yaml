@@ -11,6 +11,3 @@ helmCharts:
   releaseName: kubevela
   includeCRDs: true
   valuesFile: values.yaml
-
-patchesStrategicMerge:
-- patches/cm-fluxcd-annotations.yaml
