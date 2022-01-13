@@ -443,8 +443,25 @@ spec:
                 description: The generation observed by the application controller.
                 format: int64
                 type: integer
+              policy:
+                description: PolicyStatus records the status of policy
+                items:
+                  description: PolicyStatus records the status of policy
+                  properties:
+                    name:
+                      type: string
+                    status:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                    type:
+                      type: string
+                  required:
+                  - name
+                  - type
+                  type: object
+                type: array
               resourceTracker:
-                description: ResourceTracker record the status of the ResourceTracker
+                description: Deprecated ResourceTracker record the status of the ResourceTracker
                 properties:
                   apiVersion:
                     description: API version of the referent.
@@ -616,7 +633,7 @@ spec:
                   type: object
                 type: array
               status:
-                description: ApplicationPhase is a label for the condition of a application at the current time
+                description: ApplicationPhase is a label for the condition of an application at the current time
                 type: string
               workflow:
                 description: Workflow record the status of workflow
@@ -648,14 +665,29 @@ spec:
                         description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                         type: string
                     type: object
+                  finished:
+                    type: boolean
+                  message:
+                    type: string
                   mode:
                     description: WorkflowMode describes the mode of workflow
+                    type: string
+                  startTime:
+                    format: date-time
                     type: string
                   steps:
                     items:
                       description: WorkflowStepStatus record the status of a workflow step
                       properties:
+                        firstExecuteTime:
+                          description: FirstExecuteTime is the first time this step execution.
+                          format: date-time
+                          type: string
                         id:
+                          type: string
+                        lastExecuteTime:
+                          description: LastExecuteTime is the last time this step execution.
+                          format: date-time
                           type: string
                         message:
                           description: A human readable message indicating details about why the workflowStep is in this state.
@@ -711,6 +743,7 @@ spec:
                   terminated:
                     type: boolean
                 required:
+                - finished
                 - mode
                 - suspend
                 - terminated
@@ -1236,8 +1269,25 @@ spec:
                 description: The generation observed by the application controller.
                 format: int64
                 type: integer
+              policy:
+                description: PolicyStatus records the status of policy
+                items:
+                  description: PolicyStatus records the status of policy
+                  properties:
+                    name:
+                      type: string
+                    status:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                    type:
+                      type: string
+                  required:
+                  - name
+                  - type
+                  type: object
+                type: array
               resourceTracker:
-                description: ResourceTracker record the status of the ResourceTracker
+                description: Deprecated ResourceTracker record the status of the ResourceTracker
                 properties:
                   apiVersion:
                     description: API version of the referent.
@@ -1409,7 +1459,7 @@ spec:
                   type: object
                 type: array
               status:
-                description: ApplicationPhase is a label for the condition of a application at the current time
+                description: ApplicationPhase is a label for the condition of an application at the current time
                 type: string
               workflow:
                 description: Workflow record the status of workflow
@@ -1441,14 +1491,29 @@ spec:
                         description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                         type: string
                     type: object
+                  finished:
+                    type: boolean
+                  message:
+                    type: string
                   mode:
                     description: WorkflowMode describes the mode of workflow
+                    type: string
+                  startTime:
+                    format: date-time
                     type: string
                   steps:
                     items:
                       description: WorkflowStepStatus record the status of a workflow step
                       properties:
+                        firstExecuteTime:
+                          description: FirstExecuteTime is the first time this step execution.
+                          format: date-time
+                          type: string
                         id:
+                          type: string
+                        lastExecuteTime:
+                          description: LastExecuteTime is the last time this step execution.
+                          format: date-time
                           type: string
                         message:
                           description: A human readable message indicating details about why the workflowStep is in this state.
@@ -1504,6 +1569,7 @@ spec:
                   terminated:
                     type: boolean
                 required:
+                - finished
                 - mode
                 - suspend
                 - terminated

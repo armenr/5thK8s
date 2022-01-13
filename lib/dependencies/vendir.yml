@@ -213,6 +213,7 @@ directories:
   - path: helm-chart
     helmChart:
       name: vela-core
+      version: 1.2.0-rc.2
       repository:
         url: https://charts.kubevela.net/core
 
