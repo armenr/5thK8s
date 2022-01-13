@@ -10,7 +10,7 @@ spec:
   generators:
     - git:
         files:
-          - path: argocd-app-setscluster-resources/*.json
+          - path: argocd-app-sets/cluster-resources/*.json
         repoURL: https://github.com/armenr/5thK8s.git
         requeueAfterSeconds: 20
         revision: ''
@@ -41,7 +41,7 @@ spec:
           kind: Application
       project: default
       source:
-        path: argocd-app-setscluster-resources/{{name}}
+        path: argocd-app-sets/cluster-resources/{{name}}
         repoURL: https://github.com/armenr/5thK8s.git
       syncPolicy:
         automated:
