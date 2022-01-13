@@ -115,22 +115,3 @@ crossplane-aws-sealed-secret:
 
 destroy-cluster:
 	k3d cluster delete local-$(shell whoami)
-
-
-# bootstrap-argocd:
-
-# 	kubectl -n argocd create secret generic \
-# 		autopilot-secret \
-# 		--from-literal git_username=$GITHUB_USER \
-# 		--from-literal git-token=$GIT_TOKEN
-# 	kustomize build \
-# 		lib/dependencies/argo-cd \
-# 		> lib/bootstrap/argo-cd/argo-cd.base.yaml
-# 	kustomize build --enable-helm \
-# 		lib/dependencies/argocd-applicationset \
-# 		> lib/bootstrap/argo-cd/argocd-applicationsets.base.yaml
-# 	kustomize build \
-# 		lib/bootstrap/argo-cd \
-# 		| kubectl apply -n argocd -f -
-
-# destroy all the things
