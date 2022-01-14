@@ -1,0 +1,15 @@
+dependencies:
+- name: testkube-operator
+  repository: file://../testkube-operator
+  version: 0.7.5
+- name: mongodb
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.0.0
+- name: api-server
+  repository: file://../api-server
+  version: 0.7.18
+- name: testkube-dashboard
+  repository: file://../testkube-dashboard
+  version: 0.7.6
+digest: sha256:f3a9bc9380fb1b58498e36dc9075a6d139fee7799a2b2dfd8ec81c29468a1cf4
+generated: "2022-01-14T09:40:37.602807327Z"

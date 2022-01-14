@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: 0.7.6
+description: A Helm chart for Kubernetes
+name: testkube-dashboard
+type: application
+version: 0.7.6

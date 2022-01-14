@@ -130,4 +130,10 @@ directories:
       version: 10.9.1
     path: helm-chart
   path: traefik/synced
+- contents:
+  - helmChart:
+      appVersion: ""
+      version: 0.7.42
+    path: helm-chart
+  path: testkube/synced
 kind: LockConfig

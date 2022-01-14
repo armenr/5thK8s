@@ -212,11 +212,11 @@ directories:
         repository:
           url: https://helm.traefik.io/traefik
 
+# testkube
 - path: testkube/synced
   contents:
-  - path: helm-chart
-    helmChart:
-      name: testkube
-      repository:
-        url: https://kubeshop.github.io/helm-charts
-
+    - path: helm-chart
+      helmChart:
+        name: testkube
+        repository:
+          url: https://kubeshop.github.io/helm-charts
