@@ -1,8 +1,8 @@
-multicluster:
-  enabled: true
+# multicluster:
+#   enabled: true
 
 # NOTE: This requires that cert-manager be installed *before* vela
-admissionWebhooks:
-  enabled: true
-  certManager:
-    enabled: true
+# admissionWebhooks:
+#   enabled: true
+#   certManager:
+#     enabled: true
