@@ -16,7 +16,6 @@ directories:
       name: cert-manager
       repository:
         url: https://charts.jetstack.io
-    # version: 1.6.1
 
   - path: crds
     http:
@@ -66,7 +65,6 @@ directories:
       name: argo-workflows
       repository:
         url: https://charts.bitnami.com/bitnami
-    # version: 1.6.1
 
 # Argo-CD notifications
 - path: argocd-notifications/synced
@@ -76,7 +74,6 @@ directories:
       name: argocd-notifications
       repository:
         url: https://argoproj.github.io/argo-helm
-    # version: 1.6.1
 
 # Argo-CD ApplicationSets
 - path: argocd-applicationset/synced
@@ -86,7 +83,6 @@ directories:
       name: argocd-applicationset
       repository:
         url: https://argoproj.github.io/argo-helm
-    # version: 1.6.1
 
 # Argo Rollouts
 - path: argo-rollouts/synced
@@ -96,7 +92,6 @@ directories:
       name: argo-rollouts
       repository:
         url: https://argoproj.github.io/argo-helm
-    # version: 1.6.1
 
 # Argo Events
 - path: argo-events/synced
@@ -106,7 +101,6 @@ directories:
       name: argo-events
       repository:
         url: https://argoproj.github.io/argo-helm
-    # version: 1.6.1
 
 # Redis
 - path: redis/synced
@@ -116,7 +110,6 @@ directories:
       name: redis
       repository:
         url: https://charts.bitnami.com/bitnami
-    # version: 1.6.1
 
 # RabbitMQ
 - path: rabbitmq/synced
@@ -126,7 +119,6 @@ directories:
       name: rabbitmq
       repository:
         url: https://charts.bitnami.com/bitnami
-    # version: 1.6.1
 
 # MariaDB
 - path: mariadb/synced
@@ -136,7 +128,6 @@ directories:
       name: mariadb
       repository:
         url: https://charts.bitnami.com/bitnami
-    # version: 1.6.1
 
 # metrics-server
 - path: metrics-server/synced
@@ -146,7 +137,6 @@ directories:
       name: metrics-server
       repository:
         url: https://charts.bitnami.com/bitnami
-    # version: 1.6.1
 
 # kube-watch
 - path: kubewatch/synced
@@ -156,7 +146,6 @@ directories:
       name: kubewatch
       repository:
         url: https://charts.bitnami.com/bitnami
-    # version: 1.6.1
 
 # kube-state-metrics
 - path: kube-state-metrics/synced
@@ -166,7 +155,6 @@ directories:
       name: kube-state-metrics
       repository:
         url: https://charts.bitnami.com/bitnami
-    # version: 1.6.1
 
 # cost-analyzer
 - path: cost-analyzer/synced
@@ -176,7 +164,6 @@ directories:
       name: cost-analyzer
       repository:
         url: https://kubecost.github.io/cost-analyzer/
-    # version: 1.6.1
 
 # sealed-secrets
 - path: sealed-secrets/synced
@@ -195,7 +182,6 @@ directories:
       name: crossplane
       repository:
         url: https://charts.crossplane.io/stable
-    # version: 1.6.1
 
   - path: examples
     git:
@@ -225,3 +211,12 @@ directories:
         name: traefik
         repository:
           url: https://helm.traefik.io/traefik
+
+- path: testkube/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: testkube
+      repository:
+        url: https://kubeshop.github.io/helm-charts
+
