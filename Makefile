@@ -96,7 +96,7 @@ remove-argocd:
 	kubectl delete namespace argocd
 
 crossplane-aws-sealed-secret:
-	echo "[default]\naws_access_key_id = $$(aws configure get aws_access_key_id)\naws_secret_access_key = $$(aws configure get aws_secret_access_key)" \
+	echo "[default]\naws_access_key_id = $$(aws configure --profile 5k-dev get aws_access_key_id)\naws_secret_access_key = $$(aws configure --profile 5k-dev get aws_secret_access_key)" \
 	| \
 	kubectl create secret generic aws-credentials \
 		--from-file=aws-credentials=/dev/stdin\
