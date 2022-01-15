@@ -1,0 +1,6 @@
+{
+  "name": "prometheus",
+  "namespace": "prometheus",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": true
+}
