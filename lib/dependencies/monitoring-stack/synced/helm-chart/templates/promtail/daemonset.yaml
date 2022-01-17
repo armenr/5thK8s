@@ -1,0 +1,65 @@
+{{- if .Values.promtail.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: promtail
+  namespace: {{ .Values.promtail.namespace.name }}
+  labels:
+    app: promtail
+spec:
+  selector:
+    matchLabels:
+      app: promtail
+  template:
+    metadata:
+      labels:
+        app: promtail
+    spec:
+      affinity: {{ toYaml ( .Values.promtail.daemonset.affinity ) | nindent 8 }}
+      serviceAccountName: promtail
+      containers:
+        - name: promtail
+          image: {{ .Values.promtail.daemonset.image }}
+          imagePullPolicy: {{ .Values.promtail.daemonset.imagePullPolicy | default "IfNotPresent" }}
+          args:
+            - -config.file=/etc/promtail/promtail.yaml
+            - -client.url={{ .Values.promtail.daemonset.lokiEndpoint }}
+          resources: {{ toYaml ( .Values.promtail.daemonset.resources ) | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/promtail
+            - name: run
+              mountPath: /run/promtail
+            - name: docker
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: pods
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: varlogcontainers
+              mountPath: /var/log/containers
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - containerPort: 3101
+              name: http-metrics
+      volumes:
+        - name: config
+          configMap:
+            name: promtail
+        - name: run
+          hostPath:
+            path: /run/promtail
+        - name: docker
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: pods
+          hostPath:
+            path: /var/log/pods
+        - name: varlogcontainers
+          hostPath:
+            path: /var/log/containers
+{{- end }}

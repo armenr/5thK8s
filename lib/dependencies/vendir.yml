@@ -220,3 +220,12 @@ directories:
         name: testkube
         repository:
           url: https://kubeshop.github.io/helm-charts
+
+  # monitoring-stack
+- path: monitoring-stack/synced
+  contents:
+    - path: helm-chart
+      helmChart:
+        name: monitoring-stack
+        repository:
+          url: https://gitlab.com/api/v4/projects/32903346/packages/helm/stable

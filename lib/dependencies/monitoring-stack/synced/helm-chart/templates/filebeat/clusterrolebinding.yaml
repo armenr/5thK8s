@@ -1,0 +1,15 @@
+{{- if .Values.filebeat.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  namespace: {{ .Values.filebeat.namespace }}
+  name: filebeat
+subjects:
+  - kind: ServiceAccount
+    name: filebeat
+    namespace: {{ .Values.filebeat.namespace }}
+roleRef:
+  kind: ClusterRole
+  name: filebeat
+  apiGroup: rbac.authorization.k8s.io
+{{- end -}}

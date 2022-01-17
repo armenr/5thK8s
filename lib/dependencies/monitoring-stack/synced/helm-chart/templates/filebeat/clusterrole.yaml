@@ -1,0 +1,19 @@
+{{- if .Values.filebeat.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  namespace: {{ .Values.filebeat.namespace }}
+  name: filebeat
+  labels:
+    app: filebeat
+rules:
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - pods
+      - nodes
+    verbs:
+      - get
+      - watch
+      - list
+{{- end -}}

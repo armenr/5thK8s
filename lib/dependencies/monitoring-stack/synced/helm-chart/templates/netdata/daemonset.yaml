@@ -1,0 +1,56 @@
+{{- if .Values.netdata.enabled -}}
+apiVersion: {{ template "prometheus.daemonset.apiVersion" . }}
+kind: DaemonSet
+metadata:
+  name: netdata
+  namespace: {{ .Values.netdata.namespace }}
+  labels:
+    app: netdata
+spec:
+  selector:
+    matchLabels:
+      app: netdata
+  template:
+    metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/netdata: unconfined
+      labels:
+        app: netdata
+    spec:
+      hostNetwork: {{ .Values.netdata.hostNetwork }}
+      containers:
+        - name: netdata
+          image: {{ required "An image filed is required" .Values.netdata.image }}
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+          securityContext:
+            capabilities:
+              add: ["SYS_PTRACE"]
+          volumeMounts:
+            - name: proc
+              mountPath: /host/proc
+            - name: sys
+              mountPath: /host/sys
+            - name: docker
+              mountPath: /var/run/docker.sock
+              readOnly: true
+            - name: slash
+              mountPath: /host
+              readOnly: true
+          resources: {{ toYaml ( .Values.netdata.resources ) | nindent 12 }}
+      restartPolicy: Always
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: docker
+          hostPath:
+            path: /var/run/docker.sock
+        - name: slash
+          hostPath:
+            path: /
+{{- end -}}

@@ -1,0 +1,77 @@
+{{- if .Values.filebeat.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: {{ .Values.filebeat.namespace }}
+  name: filebeat
+  labels:
+    app: filebeat
+spec:
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      affinity: {{ toYaml ( .Values.filebeat.affinity ) | nindent 8 }}
+      hostAliases: {{ toYaml ( .Values.filebeat.hostAliases ) | nindent 8 }}
+      serviceAccountName: filebeat
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: filebeat
+        image: {{ .Values.filebeat.image }}
+        args: ["-c", "/etc/filebeat.yml", "-e"]
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          runAsUser: 0
+        resources:
+        volumeMounts:
+        - name: config
+          mountPath: /etc/filebeat.yml
+          readOnly: true
+          subPath: filebeat.yml
+        - name: data
+          mountPath: /usr/share/filebeat/data
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
+        - name: varlognginx
+          mountPath: /var/log/nginx
+          readOnly: true
+        - name: storagenginx
+          mountPath: /storage/nginx
+          readOnly: true
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+        - name: dockersock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: config
+        configMap:
+          defaultMode: 0600
+          name: filebeat-config
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlognginx
+        hostPath:
+          path: /var/log/nginx
+      - name: storagenginx
+        hostPath:
+          path: /storage/nginx
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: data
+        emptyDir: {}
+{{- end -}}

@@ -1,0 +1,51 @@
+{{- if .Values.filebeat.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.filebeat.namespace }}
+  name: filebeat-config
+  labels:
+    app: filebeat
+data:
+{{- range $path, $config := .Values.filebeat.filebeatConfig }}
+  {{ $path }}: |
+{{ $config | indent 4 -}}
+{{- end -}}
+    filebeat.modules:
+      - module: system
+        syslog:
+          enabled: false
+        auth:
+          enabled: false
+    filebeat.autodiscover:
+      providers:
+        - type: kubernetes
+          templates:
+            - condition.equals:
+                kubernetes.labels.app: mongo
+              config:
+                - type: docker
+                  containers.ids:
+                    - ${data.kubernetes.container.id}
+    processors:
+      - drop_event:
+          when.or:
+              - and:
+                  - regexp:
+                      message: '^\d+\.\d+\.\d+\.\d+ '
+                  - equals:
+                      fileset.name: error
+              - and:
+                  - not:
+                      regexp:
+                          message: '^\d+\.\d+\.\d+\.\d+ '
+                  - equals:
+                      fileset.name: access
+      - add_cloud_metadata:
+      - add_kubernetes_metadata:
+      - add_docker_metadata:
+    output.{{ .Values.filebeat.output }}:
+      hosts: {{- range .Values.filebeat.output_hosts }}
+        - {{.}}{{- end }}
+      loadbalance: true
+{{- end -}}
