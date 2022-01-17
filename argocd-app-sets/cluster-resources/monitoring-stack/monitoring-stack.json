@@ -1,0 +1,5 @@
+{
+  "name": "monitoring-stack",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": false
+}
