@@ -27,6 +27,7 @@ kubeStateMetrics:
   fullnameOverride: kube-state-metrics
 
 server:
+  enabled: true
   persistentVolume:
     enabled: false
   retention: 1h
