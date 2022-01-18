@@ -43,7 +43,7 @@ metadata:
     release: monitoring-stack
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: prometheus-prometheus-prefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: prometheus-prefix@kubernetescrd
   name: monitoring-stack-server
   namespace: prometheus
 spec:
