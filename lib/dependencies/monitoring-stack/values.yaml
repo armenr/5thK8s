@@ -27,6 +27,11 @@ kubeStateMetrics:
   fullnameOverride: kube-state-metrics
 
 server:
+  # ingress:
+  #   enabled: true
+  #   hosts:
+  #     - kubernetes.docker.internal
+
   enabled: true
   persistentVolume:
     enabled: false

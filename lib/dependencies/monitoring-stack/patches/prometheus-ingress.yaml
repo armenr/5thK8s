@@ -1,34 +1,60 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: prometheus-ingress
-  annotations:
-    # ingress.kubernetes.io/rewrite-target: /
-    # ingress.kubernetes.io/app-root: /prometheus
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-spec:
-  rules:
-    - host: kubernetes.docker.internal
-      http:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: monitoring-stack-server
-                port:
-                  name: http
-
-
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: prometheus-ingress
+#   annotations:
+#     # ingress.kubernetes.io/rewrite-target: /
+#     # ingress.kubernetes.io/app-root: /prometheus
+#     traefik.ingress.kubernetes.io/router.entrypoints: web
 # spec:
 #   rules:
 #     - host: kubernetes.docker.internal
 #       http:
 #         paths:
-#           - path: /argocd
+#           - path: /
 #             pathType: ImplementationSpecific
 #             backend:
 #               service:
-#                 name: argo-cd-server
+#                 name: monitoring-stack-server
 #                 port:
 #                   name: http
+
+
+# # spec:
+# #   rules:
+# #     - host: kubernetes.docker.internal
+# #       http:
+# #         paths:
+# #           - path: /argocd
+# #             pathType: ImplementationSpecific
+# #             backend:
+# #               service:
+# #                 name: argo-cd-server
+# #                 port:
+# #                   name: http
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: monitoring-stack
+    chart: monitoring-stack-0.1.0
+    component: server
+    release: monitoring-stack
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: prometheus-prometheus-prefix@kubernetescrd
+  name: monitoring-stack-server
+  namespace: prometheus
+spec:
+  rules:
+  - host: kubernetes.docker.internal
+    http:
+      paths:
+      - backend:
+          service:
+            name: monitoring-stack-server
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
