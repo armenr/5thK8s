@@ -1,0 +1,21 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prometheus-ingress
+  namespace: prometheus
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`kubernetes.docker.internal`) && PathPrefix(`/prometheus`)
+      priority: 10
+      middlewares:
+        - name: prometheus-prefix
+          namespace: prometheus
+      services:
+        - kind: Service
+          name: monitoring-stack-server
+          namespace: prometheus
+          passHostHeader: true
+          scheme: http

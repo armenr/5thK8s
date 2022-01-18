@@ -11,3 +11,7 @@ helmCharts:
     releaseName: monitoring-stack
     valuesFile: values.yaml
     includeCRDs: true
+
+resources:
+  - patches/prometheus-ingress.yaml
+  - patches/prometheus-ingress-route.yaml
