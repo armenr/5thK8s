@@ -1,5 +1,6 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
+namespace: prometheus
 metadata:
   name: prometheus-prefix
 spec:
