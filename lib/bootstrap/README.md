@@ -6,9 +6,8 @@
 - docker
 - kustomize
 - kubectl
-- kapp
-  - `brew tap vmware-tanzu/carvel`
-  - `brew install kapp`
+- kubeseal
+- helm (v3)
 
 ## Quick Start
 
