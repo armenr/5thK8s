@@ -37,9 +37,7 @@ server:
 
   ingress:
     enabled: true
-    ingressClassName: traefik
     annotations:
-      kubernetes.io/ingress.class: traefik
       traefik.ingress.kubernetes.io/router.entrypoints: web
     hosts:
       - kubernetes.docker.internal
