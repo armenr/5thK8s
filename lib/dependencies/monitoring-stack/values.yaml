@@ -38,6 +38,7 @@ server:
   ingress:
     enabled: true
     annotations:
+      ingress.kubernetes.io/rewrite-target: /prometheus
       traefik.ingress.kubernetes.io/router.entrypoints: web
       traefik.ingress.kubernetes.io/router.middlewares: monitoring-stack-prometheus-prefix@kubernetescrd
     hosts:
