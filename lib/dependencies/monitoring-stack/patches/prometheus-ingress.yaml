@@ -4,17 +4,30 @@ metadata:
   name: prometheus-ingress
   annotations:
     # ingress.kubernetes.io/rewrite-target: /
-    ingress.kubernetes.io/app-root: /prometheus
-#    traefik.ingress.kubernetes.io/router.entrypoints: web
-    # traefik.ingress.kubernetes.io/router.middlewares: argo-rollouts-prefix-middleware@kubernetescrd
+    # ingress.kubernetes.io/app-root: /prometheus
+    traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
     - host: kubernetes.docker.internal
       http:
         paths:
-          - backend:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
               service:
                 name: monitoring-stack-server.prometheus.svc
-                port: 80
-            path: /
-            pathType: Prefix
+                port: http
+
+
+# spec:
+#   rules:
+#     - host: kubernetes.docker.internal
+#       http:
+#         paths:
+#           - path: /argocd
+#             pathType: ImplementationSpecific
+#             backend:
+#               service:
+#                 name: argo-cd-server
+#                 port:
+#                   name: http
