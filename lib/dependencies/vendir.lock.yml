@@ -55,7 +55,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: v1.5.0
-      version: 1.9.0
+      version: 1.10.0
     path: helm-chart
   path: argo-events/synced
 - contents:
@@ -133,7 +133,13 @@ directories:
 - contents:
   - helmChart:
       appVersion: ""
-      version: 0.7.42
+      version: 0.7.44
     path: helm-chart
   path: testkube/synced
+- contents:
+  - helmChart:
+      appVersion: ""
+      version: 0.1.0
+    path: helm-chart
+  path: monitoring-stack/synced
 kind: LockConfig

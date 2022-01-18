@@ -8,6 +8,8 @@ keywords:
 - filebeat
 - promtail
 maintainers:
+- email: davtyan.hayk@picsart.com
+  name: Hayk Davtyan
 - email: gevorg.khachatryan@picsart.com
   name: Jor Khachatryan
 name: monitoring-stack
