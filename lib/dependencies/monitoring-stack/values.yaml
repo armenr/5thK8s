@@ -31,8 +31,8 @@ server:
   #   enabled: true
   #   hosts:
   #     - kubernetes.docker.internal
-  # prefixURL: "/prometheus"
-  # baseURL: "kubernetes.docker.internal"
+  prefixURL: "/prometheus"
+  baseURL: "kubernetes.docker.internal"
 
 
   ingress:
