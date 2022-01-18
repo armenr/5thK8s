@@ -15,7 +15,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: monitoring-stack-server.prometheus.svc
+                name: monitoring-stack-server
                 port:
                   name: http
 
