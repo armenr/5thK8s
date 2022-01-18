@@ -24,20 +24,8 @@ define chdir
 	$(info $(MAKE): cd $(_D)) $(eval SHELL = cd $(_D); $(CHDIR_SHELL))
 endef
 
-cluster:
-	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
-	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
-	sleep 60
-	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
-
 argocd-namespace:
 	kubectl create namespace argocd
-
-sealed-secrets-namespace:
-	kubectl create namespace sealed-secrets
-
-crossplane-namespace:
-	kubectl create namespace crossplane-system
 
 bootstrap-argocd:
 	export TZ=UTC
@@ -50,6 +38,32 @@ bootstrap-argocd:
 	$(MAKE) install-cluster-resources
 	sleep 40
 	$(MAKE) crossplane-aws-sealed-secret
+
+cluster:
+	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
+	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
+	sleep 60
+	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
+
+crossplane-aws-sealed-secret:
+	echo "[default]\naws_access_key_id = $$(aws configure --profile 5k-dev get aws_access_key_id)\naws_secret_access_key = $$(aws configure --profile 5k-dev get aws_secret_access_key)" \
+	| \
+	kubectl create secret generic aws-credentials \
+		--from-file=aws-credentials=/dev/stdin\
+		--output json \
+		--dry-run=client \
+    | kubeseal \
+		--format yaml \
+		--controller-namespace sealed-secrets \
+		--controller-name sealed-secrets \
+		--namespace crossplane-system \
+    | tee lib/crossplane-assets/configs/aws-credentials.yaml
+
+crossplane-namespace:
+	kubectl create namespace crossplane-system
+
+destroy-cluster:
+	k3d cluster delete local-$(shell whoami)
 
 github-credentials:
 	kubectl -n argocd create secret generic \
@@ -95,19 +109,5 @@ remove-argocd:
 		| kubectl -n argocd delete -f -;
 	kubectl delete namespace argocd
 
-crossplane-aws-sealed-secret:
-	echo "[default]\naws_access_key_id = $$(aws configure --profile 5k-dev get aws_access_key_id)\naws_secret_access_key = $$(aws configure --profile 5k-dev get aws_secret_access_key)" \
-	| \
-	kubectl create secret generic aws-credentials \
-		--from-file=aws-credentials=/dev/stdin\
-		--output json \
-		--dry-run=client \
-    | kubeseal \
-		--format yaml \
-		--controller-namespace sealed-secrets \
-		--controller-name sealed-secrets \
-		--namespace crossplane-system \
-    | tee lib/crossplane-assets/configs/aws-credentials.yaml
-
-destroy-cluster:
-	k3d cluster delete local-$(shell whoami)
+sealed-secrets-namespace:
+	kubectl create namespace sealed-secrets
