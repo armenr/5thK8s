@@ -91,7 +91,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 2.3.0
-      version: 2.2.2
+      version: 2.2.3
     path: helm-chart
   path: kube-state-metrics/synced
 - contents:
@@ -133,7 +133,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: ""
-      version: 0.7.44
+      version: 0.7.46
     path: helm-chart
   path: testkube/synced
 - contents:

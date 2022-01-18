@@ -8,7 +8,7 @@ dependencies:
   version: 10.0.0
 - name: api-server
   repository: file://../api-server
-  version: 0.7.20
+  version: 0.7.22
 - condition: testkube-dashboard.enabled
   name: testkube-dashboard
   repository: file://../testkube-dashboard
@@ -16,4 +16,4 @@ dependencies:
 description: A Helm chart for testkube.
 name: testkube
 type: application
-version: 0.7.44
+version: 0.7.46

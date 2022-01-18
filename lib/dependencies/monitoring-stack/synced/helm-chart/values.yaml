@@ -1733,9 +1733,6 @@ serverFiles:
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             action: keep
             regex: true
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
-            action: drop
-            regex: true
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
             action: replace
             target_label: __scheme__
@@ -1750,19 +1747,16 @@ serverFiles:
             regex: ([^:]+)(?::\d+)?;(\d+)
             replacement: $1:$2
           - action: labelmap
-            regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
-            replacement: __param_$1
-          - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
-            target_label: namespace
+            target_label: kubernetes_namespace
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
-            target_label: service
+            target_label: kubernetes_name
           - source_labels: [__meta_kubernetes_pod_node_name]
             action: replace
-            target_label: node
+            target_label: kubernetes_node
 
       # Scrape config for slow service endpoints; same as above, but with a larger
       # timeout and a larger interval
@@ -1804,19 +1798,16 @@ serverFiles:
             regex: ([^:]+)(?::\d+)?;(\d+)
             replacement: $1:$2
           - action: labelmap
-            regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
-            replacement: __param_$1
-          - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
-            target_label: namespace
+            target_label: kubernetes_namespace
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
-            target_label: service
+            target_label: kubernetes_name
           - source_labels: [__meta_kubernetes_pod_node_name]
             action: replace
-            target_label: node
+            target_label: kubernetes_node
 
       - job_name: 'prometheus-pushgateway'
         honor_labels: true
@@ -1866,8 +1857,7 @@ serverFiles:
       # The relabeling allows the actual pod scrape endpoint to be configured via the
       # following annotations:
       #
-      # * `prometheus.io/scrape`: Only scrape pods that have a value of `true`,
-      # except if `prometheus.io/scrape-slow` is set to `true` as well.
+      # * `prometheus.io/scrape`: Only scrape pods that have a value of `true`
       # * `prometheus.io/scheme`: If the metrics endpoint is secured then you will need
       # to set this to `https` & most likely set the `tls_config` of the scrape config.
       # * `prometheus.io/path`: If the metrics path is not `/metrics` override this.
@@ -1880,9 +1870,6 @@ serverFiles:
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
-            regex: true
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape_slow]
-            action: drop
             regex: true
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
             action: replace
@@ -1898,18 +1885,15 @@ serverFiles:
             replacement: $1:$2
             target_label: __address__
           - action: labelmap
-            regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
-            replacement: __param_$1
-          - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
-            target_label: namespace
+            target_label: kubernetes_namespace
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
-            target_label: pod
+            target_label: kubernetes_pod_name
           - source_labels: [__meta_kubernetes_pod_phase]
-            regex: Pending|Succeeded|Failed|Completed
+            regex: Pending|Succeeded|Failed
             action: drop
 
       # Example Scrape config for pods which should be scraped slower. An useful example
@@ -1949,18 +1933,15 @@ serverFiles:
             replacement: $1:$2
             target_label: __address__
           - action: labelmap
-            regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
-            replacement: __param_$1
-          - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
-            target_label: namespace
+            target_label: kubernetes_namespace
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
-            target_label: pod
+            target_label: kubernetes_pod_name
           - source_labels: [__meta_kubernetes_pod_phase]
-            regex: Pending|Succeeded|Failed|Completed
+            regex: Pending|Succeeded|Failed
             action: drop
 
       - job_name: kubernetes-netdata
