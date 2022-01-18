@@ -42,12 +42,12 @@ server:
 #    type: LoadBalancer
   service:
     annotations: {}
-    clusterIP: ""
+    # clusterIP: ""
     labels: {}
     port: 9090
     targetPort: 9090
-    nodePort: 32636
-    type: NodePort
+    # nodePort: 32636
+    type: ClusterIP
 
   global:
     scrape_interval: 10s
