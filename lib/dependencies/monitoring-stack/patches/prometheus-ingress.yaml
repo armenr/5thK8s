@@ -50,10 +50,10 @@ spec:
   - host: kubernetes.docker.internal
     http:
       paths:
-      - backend:
+      - path: /prometheus
+        backend:
           service:
             name: monitoring-stack-server
             port:
-              number: 80
-        path: /prometheus
+              name: http
         pathType: Prefix

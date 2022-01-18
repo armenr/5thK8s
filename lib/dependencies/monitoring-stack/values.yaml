@@ -31,6 +31,20 @@ server:
   #   enabled: true
   #   hosts:
   #     - kubernetes.docker.internal
+  # prefixURL: "/prometheus"
+  # baseURL: "kubernetes.docker.internal"
+
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+    hosts:
+      - kubernetes.docker.internal
+    path: /prometheus
+    pathType: Prefix
 
   enabled: true
   persistentVolume:
