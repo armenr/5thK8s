@@ -16,7 +16,8 @@ spec:
             backend:
               service:
                 name: monitoring-stack-server.prometheus.svc
-                port: http
+                port:
+                  name: http
 
 
 # spec:
