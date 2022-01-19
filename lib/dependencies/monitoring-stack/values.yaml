@@ -27,18 +27,18 @@ kubeStateMetrics:
   fullnameOverride: kube-state-metrics
 
 server:
-  prefixURL: "/prometheus"
-  baseURL: "kubernetes.docker.internal"
+#  prefixURL: "/prometheus"
+#  baseURL: "kubernetes.docker.internal"
 
-  ingress:
-    enabled: true
-    annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: web
-      traefik.ingress.kubernetes.io/router.middlewares: monitoring-stack-prometheus-prefix@kubernetescrd
-    hosts:
-      - kubernetes.docker.internal
-    path: /prometheus
-    pathType: Prefix
+#  ingress:
+#    enabled: true
+#    annotations:
+#      traefik.ingress.kubernetes.io/router.entrypoints: web
+#      traefik.ingress.kubernetes.io/router.middlewares: monitoring-stack-prometheus-prefix@kubernetescrd
+#    hosts:
+#      - kubernetes.docker.internal
+#    path: /prometheus
+#    pathType: Prefix
 
   enabled: true
   persistentVolume:

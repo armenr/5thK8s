@@ -1,167 +1,26 @@
-# ====================== Prometheus stack ============================
-alertmanager:
-  enabled: false
-
-pushgateway:
-  enabled: false
-
-nodeExporter:
-  enabled: false
-
-netdata:
+persistence:
+  type: pvc
   enabled: true
-  namespace: netdata
-  image: paopsmon/netdata:latest
-  hostNetwork: false
-  resources:
-    requests:
-      memory: 300Mi
-      cpu: 100m
-    limits:
-      memory: 500Mi
-      cpu: 100m
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  finalizers:
+    - kubernetes.io/pvc-protection
 
-kubeStateMetrics:
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+  annotations: {}
+  labels: {}
+  portName: service
+
+ingress:
   enabled: true
-  namespaceOverride: prometheus
-  fullnameOverride: kube-state-metrics
-
-server:
-  prefixURL: "/prometheus"
-  baseURL: "kubernetes.docker.internal"
-
-  ingress:
-    enabled: true
-    annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: web
-      traefik.ingress.kubernetes.io/router.middlewares: monitoring-stack-prometheus-prefix@kubernetescrd
-    hosts:
-      - kubernetes.docker.internal
-    path: /prometheus
-    pathType: Prefix
-
-  enabled: true
-  persistentVolume:
-    enabled: false
-  retention: 1h
-#  service:
-#    annotations:
-#      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
-#      service.beta.kubernetes.io/aws-load-balancer-type: nlb
-#    clusterIP: ""
-#    labels: {}
-#    servicePort: 9090
-#    targetPort: 9090
-#    type: LoadBalancer
-  service:
-    annotations: {}
-    # clusterIP: ""
-    labels: {}
-    port: 9090
-    targetPort: 9090
-    # nodePort: 32636
-    type: ClusterIP
-
-  global:
-    scrape_interval: 10s
-    scrape_timeout: 10s
-    evaluation_interval: 10s
-
-# deploys server, alertmanager, node-exporter, pushgateway
-# on this namespace
-forceNamespace: prometheus
-
-# adds additional scrape configs to prometheus.yml
-#extraScrapeConfigs: |
-
-# ====================== Filebeat ============================
-
-filebeat:
-  # Deploy filebeat
-  enabled: true
-  daemonset:
-  # Filebeat image to deploy
-  image: docker.elastic.co/beats/filebeat:7.16.2
-  affinity: {}
-  resources:
-    limits:
-      memory: 200Mi
-    requests:
-      cpu: 100m
-      memory: 100Mi
-  filebeatConfig:
-    filebeat.yml: |
-      filebeat.inputs:
-        - type: container
-          paths:
-            - /var/log/containers/monitoring-stack-prometheus*.log
-          exclude_files: []
-          fields: {log_type: k8s_logs}
-          tail_files: true
-          processors:
-            - add_kubernetes_metadata:
-                in_cluster: true
-                host: ${NODE_NAME}
-                matchers:
-                - logs_path:
-                    logs_path: "/var/log/containers/"
-  # An output to send logs
-  output: logstash
-  loadbalance: true
-  output_hosts:
-    - logstash-host1:port
-    - logstash-host2:port
-
-# ====================== Promtail ============================
-
-promtail:
-  enabled: true
-  namespace:
-    name: promtail
-  daemonset:
-    image: grafana/promtail:2.3.0
-    affinity: {}
-    lokiEndpoint: http://loki-endpoint:port/loki/api/v1/push
-    resources:
-      requests:
-        memory: 30Mi
-        cpu: 0.01
-      limits:
-        memory: 150Mi
-        cpu: 0.3
-  promtailConfig:
-    external_labels:
-      provider: "AWS"
-      region: "us-east1"
-      cluster_name: "some-cluster-name"
-      environment: "dev"
-    scrape_configs:
-      - job_name: kubernetes-full-logging
-        pipeline_stages:
-          - docker: {}
-        kubernetes_sd_configs:
-          - role: pod
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_container_name]
-            action: keep
-            regex: SOME_CONTAINER_NAME
-          - action: replace
-            source_labels:
-              - __meta_kubernetes_namespace
-            target_label: namespace
-          - action: replace
-            source_labels:
-              - __meta_kubernetes_pod_container_name
-            target_label: container_name
-          - source_labels:
-              - __meta_kubernetes_pod_node_name
-            target_label: node_name
-          - action: replace
-            source_labels:
-              - __meta_kubernetes_pod_name
-            target_label: pod_name
-          - replacement: /var/log/containers/$1*log
-            separator: /
-            source_labels:
-              - __meta_kubernetes_pod_name
-            target_label: __path__
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: grafana-grafana-prefix@kubernetescrd
+  path: /grafana
+  pathType: Prefix
+  hosts:
+    - kubernetes.docker.internal
