@@ -12,7 +12,7 @@ netdata:
   enabled: true
   namespace: netdata
   image: paopsmon/netdata:latest
-  hostNetwork: false
+  hostNetwork: true
   resources:
     requests:
       memory: 300Mi

@@ -18,7 +18,7 @@ spec:
       - path: /grafana
         backend:
           service:
-            name: grafana
+            name: monitoring-stack-server
             port:
               name: http
         pathType: Prefix
