@@ -39,6 +39,10 @@ bootstrap-argocd:
 	sleep 40
 	$(MAKE) crossplane-aws-sealed-secret
 
+cluster-monitoring-only:
+	$(MAKE) cluster
+	$(MAKE) install-monitoring-stack
+
 cluster:
 	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
 	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
@@ -71,6 +75,26 @@ github-credentials:
 		--from-literal git_username=$$GITHUB_USER \
 		--from-literal git-token=$$GIT_TOKEN
 
+install:
+	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
+		lib/dependencies/$(dependency) \
+		| kubectl apply -f - \
+		&& kubectl wait \
+			--for=condition=available \
+			--timeout=360s \
+			--all deployments \
+			--all-namespaces
+
+remove:
+	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
+		lib/dependencies/$(dependency) \
+		| kubectl delete -f - \
+		&& kubectl wait \
+			--for=condition=available \
+			--timeout=360s \
+			--all deployments \
+			--all-namespaces
+
 install-argocd:
 	export TZ=UTC
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
@@ -100,6 +124,16 @@ install-cluster-resources:
 		--all deployments \
 		--all-namespaces;
 
+install-monitoring-stack:
+	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
+		lib/dependencies/monitoring-stack \
+		| kubectl apply -f - \
+		&& kubectl wait \
+			--for=condition=available \
+			--timeout=360s \
+			--all deployments \
+			--all-namespaces
+
 remove-argocd:
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
 		argocd-app-sets/cluster-resources/argocd \
@@ -111,3 +145,29 @@ remove-argocd:
 
 sealed-secrets-namespace:
 	kubectl create namespace sealed-secrets
+
+
+# kapp-deploy-%:
+
+# 	helm template \
+# 			--release-name $(word 1, $(MAKECMDGOALS)) \
+# 			--include-crds \
+# 			--namespace argo \
+# 			--values lib/dependencies/helm-chart-values/$(word 1, $(MAKECMDGOALS)).yaml \
+# 			--repo https://charts.bitnami.com/bitnami $(word 1, $(MAKECMDGOALS)) \
+# 	| if [ -d "lib/dependencies/patches/$(word 1, $(MAKECMDGOALS))/" ]; \
+# 		then \
+# 			ytt \
+# 				-f lib/dependencies/patches/$(word 1, $(MAKECMDGOALS)) \
+# 				-f - ; \
+# 		else \
+# 			tmp_helm_rendered=$$(mktemp -u).yml; \
+# 			helmTemplate=$$(</dev/stdin); \
+# 			echo "$$helmTemplate"; \
+# 	fi \
+# 	| kapp deploy \
+# 		--app $(word 1, $(MAKECMDGOALS)) \
+# 		--namespace $(word 2, $(MAKECMDGOALS)) \
+# 		--diff-changes \
+# 		--file -
+
