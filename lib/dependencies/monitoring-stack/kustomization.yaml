@@ -12,7 +12,7 @@ helmCharts:
     valuesFile: values.yaml
     includeCRDs: true
 
-resources:
+# resources:
   # - patches/prometheus-ingress.yaml
-  - patches/prometheus-ingress-middleware.yaml
+  # - patches/prometheus-ingress-middleware.yaml
   # - patches/prometheus-ingress-route.yaml
