@@ -1,0 +1,9 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+namespace: grafana
+metadata:
+  name: grafana-prefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /grafana/

@@ -229,3 +229,12 @@ directories:
         name: monitoring-stack
         repository:
           url: https://gitlab.com/api/v4/projects/32903346/packages/helm/stable
+
+  # grafana
+- path: grafana/synced
+  contents:
+    - path: helm-chart
+      helmChart:
+        name: grafana
+        repository:
+          url: https://grafana.github.io/helm-charts

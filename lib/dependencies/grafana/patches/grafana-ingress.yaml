@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: grafana
+    chart: grafana
+    component: server
+    release: grafana
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  name: monitoring-stack-server
+  namespace: grafana
+spec:
+  rules:
+  - host: kubernetes.docker.internal
+    http:
+      paths:
+      - path: /grafana
+        backend:
+          service:
+            name: monitoring-stack-server
+            port:
+              name: http
+        pathType: Prefix
