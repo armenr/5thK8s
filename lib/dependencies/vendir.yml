@@ -103,31 +103,31 @@ directories:
         url: https://argoproj.github.io/argo-helm
 
 # Redis
-- path: redis/synced
-  contents:
-  - path: helm-chart
-    helmChart:
-      name: redis
-      repository:
-        url: https://charts.bitnami.com/bitnami
+# - path: redis/synced
+#   contents:
+#   - path: helm-chart
+#     helmChart:
+#       name: redis
+#       repository:
+#         url: https://charts.bitnami.com/bitnami
 
 # RabbitMQ
-- path: rabbitmq/synced
-  contents:
-  - path: helm-chart
-    helmChart:
-      name: rabbitmq
-      repository:
-        url: https://charts.bitnami.com/bitnami
+# - path: rabbitmq/synced
+#   contents:
+#   - path: helm-chart
+#     helmChart:
+#       name: rabbitmq
+#       repository:
+#         url: https://charts.bitnami.com/bitnami
 
 # MariaDB
-- path: mariadb/synced
-  contents:
-  - path: helm-chart
-    helmChart:
-      name: mariadb
-      repository:
-        url: https://charts.bitnami.com/bitnami
+# - path: mariadb/synced
+#   contents:
+#   - path: helm-chart
+#     helmChart:
+#       name: mariadb
+#       repository:
+#         url: https://charts.bitnami.com/bitnami
 
 # metrics-server
 - path: metrics-server/synced
@@ -157,13 +157,13 @@ directories:
         url: https://charts.bitnami.com/bitnami
 
 # cost-analyzer
-- path: cost-analyzer/synced
-  contents:
-  - path: helm-chart
-    helmChart:
-      name: cost-analyzer
-      repository:
-        url: https://kubecost.github.io/cost-analyzer/
+# - path: cost-analyzer/synced
+#   contents:
+#   - path: helm-chart
+#     helmChart:
+#       name: cost-analyzer
+#       repository:
+#         url: https://kubecost.github.io/cost-analyzer/
 
 # sealed-secrets
 - path: sealed-secrets/synced
@@ -204,22 +204,22 @@ directories:
         url: https://charts.kubevela.net/core
 
 # traefik
-- path: traefik/synced
-  contents:
-    - path: helm-chart
-      helmChart:
-        name: traefik
-        repository:
-          url: https://helm.traefik.io/traefik
+# - path: traefik/synced
+#   contents:
+#     - path: helm-chart
+#       helmChart:
+#         name: traefik
+#         repository:
+#           url: https://helm.traefik.io/traefik
 
 # testkube
-- path: testkube/synced
-  contents:
-    - path: helm-chart
-      helmChart:
-        name: testkube
-        repository:
-          url: https://kubeshop.github.io/helm-charts
+# - path: testkube/synced
+#   contents:
+#     - path: helm-chart
+#       helmChart:
+#         name: testkube
+#         repository:
+#           url: https://kubeshop.github.io/helm-charts
 
   # monitoring-stack
 - path: monitoring-stack/synced
@@ -229,3 +229,21 @@ directories:
         name: monitoring-stack
         repository:
           url: https://gitlab.com/api/v4/projects/32903346/packages/helm/stable
+
+# bitnami-prometheus
+- path: kube-prometheus/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: kube-prometheus
+      repository:
+        url: https://charts.bitnami.com/bitnami
+
+# bitnami-prometheus
+- path: node-exporter/synced
+  contents:
+  - path: helm-chart
+    helmChart:
+      name: node-exporter
+      repository:
+        url: https://charts.bitnami.com/bitnami

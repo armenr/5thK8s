@@ -10,8 +10,8 @@ directories:
   path: cert-manager/synced
 - contents:
   - helmChart:
-      appVersion: 2.2.2
-      version: 2.1.1
+      appVersion: 2.2.3
+      version: 2.1.2
     path: helm-chart
   - git:
       commitTitle: 'docs: update roadmap document with v2.2 release changes (#8089)...'
@@ -31,7 +31,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 3.2.6
-      version: 0.2.0
+      version: 0.2.1
     path: helm-chart
   path: argo-workflows/synced
 - contents:
@@ -54,28 +54,10 @@ directories:
   path: argo-rollouts/synced
 - contents:
   - helmChart:
-      appVersion: v1.5.0
-      version: 1.10.0
+      appVersion: v1.5.6
+      version: 1.10.1
     path: helm-chart
   path: argo-events/synced
-- contents:
-  - helmChart:
-      appVersion: 6.2.6
-      version: 15.7.5
-    path: helm-chart
-  path: redis/synced
-- contents:
-  - helmChart:
-      appVersion: 3.9.12
-      version: 8.26.1
-    path: helm-chart
-  path: rabbitmq/synced
-- contents:
-  - helmChart:
-      appVersion: 10.5.13
-      version: 10.3.1
-    path: helm-chart
-  path: mariadb/synced
 - contents:
   - helmChart:
       appVersion: 0.5.2
@@ -94,12 +76,6 @@ directories:
       version: 2.2.3
     path: helm-chart
   path: kube-state-metrics/synced
-- contents:
-  - helmChart:
-      appVersion: 1.89.1
-      version: 1.89.1
-    path: helm-chart
-  path: cost-analyzer/synced
 - contents:
   - helmChart:
       appVersion: v0.17.2
@@ -126,20 +102,20 @@ directories:
   path: kubevela/synced
 - contents:
   - helmChart:
-      appVersion: 2.5.6
-      version: 10.9.1
-    path: helm-chart
-  path: traefik/synced
-- contents:
-  - helmChart:
-      appVersion: ""
-      version: 0.7.46
-    path: helm-chart
-  path: testkube/synced
-- contents:
-  - helmChart:
       appVersion: ""
       version: 0.1.0
     path: helm-chart
   path: monitoring-stack/synced
+- contents:
+  - helmChart:
+      appVersion: 0.53.1
+      version: 6.6.2
+    path: helm-chart
+  path: kube-prometheus/synced
+- contents:
+  - helmChart:
+      appVersion: 1.3.1
+      version: 2.4.0
+    path: helm-chart
+  path: node-exporter/synced
 kind: LockConfig
