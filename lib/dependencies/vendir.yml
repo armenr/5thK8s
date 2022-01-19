@@ -247,3 +247,11 @@ directories:
       name: node-exporter
       repository:
         url: https://charts.bitnami.com/bitnami
+  # grafana
+- path: grafana/synced
+  contents:
+    - path: helm-chart
+      helmChart:
+        name: grafana
+        repository:
+          url: https://grafana.github.io/helm-charts

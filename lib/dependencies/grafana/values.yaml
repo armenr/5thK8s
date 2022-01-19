@@ -1,0 +1,26 @@
+persistence:
+  type: pvc
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  finalizers:
+    - kubernetes.io/pvc-protection
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+  annotations: {}
+  labels: {}
+  portName: service
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: grafana-grafana-prefix@kubernetescrd
+  path: /grafana
+  pathType: Prefix
+  hosts:
+    - kubernetes.docker.internal
