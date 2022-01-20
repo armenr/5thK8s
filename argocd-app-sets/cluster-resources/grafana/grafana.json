@@ -1,0 +1,6 @@
+{
+  "name": "grafana",
+  "namespace": "grafana",
+  "server": "https://kubernetes.default.svc",
+  "createNamespaceBool": true
+}
