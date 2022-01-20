@@ -8,19 +8,14 @@ persistence:
     - kubernetes.io/pvc-protection
 
 service:
-  type: ClusterIP
+  type: NodePort
+  nodePort: 30300
   port: 3000
   targetPort: 3000
   annotations: {}
   labels: {}
   portName: service
 
-ingress:
-  enabled: true
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: grafana-grafana-prefix@kubernetescrd
-  path: /grafana
-  pathType: Prefix
-  hosts:
-    - kubernetes.docker.internal
+plugins:
+   - bessler-pictureit-panel
+   - grafana-polystat-panel
