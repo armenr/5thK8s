@@ -1,3 +1,9 @@
+global:
+  metrics:   #this is just a test. It will be removed soon
+    enabled: true
+    service:
+      type: ClusterIP
+      port: 8089
 config:
   secret:
     argocdServerAdminPassword: BLEEGASTAN123
@@ -6,6 +12,11 @@ controller:
   logLevel: warn
 
 server:
+  metrics:
+    enabled: true
+    service:
+      type: ClusterIP
+      port: 8082
   logLevel: warn
   insecure: true
   # extraArgs:

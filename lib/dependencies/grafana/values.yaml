@@ -3,7 +3,7 @@ ingress:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
   hosts:
-  - grafana.docker.internal
+    - grafana.docker.internal
 
 persistence:
   type: pvc
@@ -15,8 +15,7 @@ persistence:
     - kubernetes.io/pvc-protection
 
 service:
-  type: NodePort
-  nodePort: 30300
+  type: ClusterIP
   port: 3000
   targetPort: 3000
   annotations: {}
@@ -26,4 +25,3 @@ service:
 plugins:
   - bessler-pictureit-panel
   - grafana-polystat-panel
-

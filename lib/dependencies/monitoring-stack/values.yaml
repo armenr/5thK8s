@@ -69,23 +69,76 @@ server:
     evaluation_interval: 10s
 
 extraScrapeConfigs: |
-  - job_name: 'dev kubernetes monitoring'
-    scheme: http
-    scrape_interval: 25s
-    scrape_timeout: 25s
-    metrics_path: /federate
-    honor_labels: true
-    params:
-      match[]:
-        - '{__name__=~".+"}'
-    static_configs:
-      - targets: ['monitoring-stack-server.prometheus.svc:80']
-        labels:
-          instance: localhost
-          provider: k3s
-          region: am
-          cluster_name: local-cluster
-          environment: dev
+   - job_name: 'dev kubernetes monitoring'
+     scheme: http
+     scrape_interval: 25s
+     scrape_timeout: 25s
+     metrics_path: /federate
+     honor_labels: true
+     params:
+       match[]:
+         - '{__name__=~".+"}'
+     static_configs:
+       - targets: ['monitoring-stack-server.prometheus.svc:80']
+         labels:
+           instance: localhost
+           provider: k3s
+           region: am
+           cluster_name: local-cluster
+           environment: dev
+   - job_name: kubernetes-argocd
+     scrape_interval: 10s
+     scrape_timeout: 10s
+     kubernetes_sd_configs:
+       - role: pod
+     relabel_configs:
+       - source_labels: [__meta_kubernetes_namespace]
+         action: replace
+         target_label: namespace
+       - source_labels: [__meta_kubernetes_pod_node_name]
+         action: replace
+         target_label: instance
+       - source_labels: [__meta_kubernetes_pod_name]
+         action: replace
+         target_label: pod
+       - source_labels: [__address__]
+         action: replace
+         regex: ([^:]+)(?::\d+)?
+         replacement: ${1}:8082
+         target_label: __address__
+       - replacement: /metrics
+         source_labels: [__metrics_path__]
+         target_label: __metrics_path__
+       - source_labels: [__meta_kubernetes_namespace]
+         action: keep
+         regex: argocd
+
+   - job_name: kubernetes-argo-rollouts
+     scrape_interval: 10s
+     scrape_timeout: 10s
+     kubernetes_sd_configs:
+       - role: pod
+     relabel_configs:
+       - source_labels: [__meta_kubernetes_namespace]
+         action: replace
+         target_label: namespace
+       - source_labels: [__meta_kubernetes_pod_node_name]
+         action: replace
+         target_label: instance
+       - source_labels: [__meta_kubernetes_pod_name]
+         action: replace
+         target_label: pod
+       - source_labels: [__address__]
+         action: replace
+         regex: ([^:]+)(?::\d+)?
+         replacement: ${1}:8090
+         target_label: __address__
+       - replacement: /metrics
+         source_labels: [__metrics_path__]
+         target_label: __metrics_path__
+       - source_labels: [__meta_kubernetes_namespace]
+         action: keep
+         regex: argo-rollouts
 
 # deploys server, alertmanager, node-exporter, pushgateway
 # on this namespace
