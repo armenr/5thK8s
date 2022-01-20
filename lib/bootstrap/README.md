@@ -31,13 +31,19 @@ make bootstrap-argocd
 That's it. Everything else happens all on its own
 
 - Make sure you have `kubernetes.docker.internal` in your `/etc/hosts`
+- Make sure to add these to `/etc/hosts` as well:
+  - `argocd.docker.internal`
+  - `workflows.docker.internal`
+  - `prometheus.docker.internal`
+  - `grafana.docker.internal`
+  - `alertmanager.docker.internal`
 
-- ArgoCD: http://kubernetes.docker.internal/argocd
+- ArgoCD: http://argocd.docker.internal/argocd
 
   - User:     admin
   - Password: BLEEGASTAN123
 
-- Argo-Workflows: http://kubernetes.docker.internal/workflows
+- Argo-Workflows: http://workflows.docker.internal
 
   - workflows has no authentication (for now)
 
