@@ -15,8 +15,7 @@ persistence:
     - kubernetes.io/pvc-protection
 
 service:
-  type: NodePort
-  nodePort: 30300
+  type: ClusterIP
   port: 3000
   targetPort: 3000
   annotations: {}
