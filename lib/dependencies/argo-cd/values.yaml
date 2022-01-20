@@ -35,7 +35,11 @@ server:
   #         args:
   #         - -ce
   #         - ./generate
-
+  metrics:
+    enabled: false
+    service:
+      type: ClusterIP
+      port: 8082
 repoServer:
   logLevel: warn
   # ConfigManagement Plugin sidecar teengz!
