@@ -1,3 +1,10 @@
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  hosts:
+  - grafana.docker.internal
+
 persistence:
   type: pvc
   enabled: true
@@ -19,3 +26,4 @@ service:
 plugins:
   - bessler-pictureit-panel
   - grafana-polystat-panel
+
