@@ -15,7 +15,7 @@ server:
   auth:
     enabled: true
     mode: server
-  baseHref: /workflows/
+  # baseHref: /workflows/
 
   ## @sub-section server.service
   service:
@@ -27,8 +27,8 @@ server:
 ingress:
   enabled: true
   pathType: ImplementationSpecific
-  hostname: kubernetes.docker.internal
-  path: /workflows
+  hostname: workflows.docker.internal
+  # path: /workflows
   tls: false
   selfSigned: false
   extraHosts: []
@@ -39,7 +39,7 @@ ingress:
   ## THESE ARE VERY IMPORTANT, MODIFY THEM CAREFULLY !!
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: argo-workflows-prefix@kubernetescrd
+    # traefik.ingress.kubernetes.io/router.middlewares: argo-workflows-prefix@kubernetescrd
     # traefik.ingress.kubernetes.io/rewrite-target: /$1
     # ingress.kubernetes.io/rewrite-target: /$1
     # traefik.ingress.kubernetes.io/router.middlewares: argo-workflows-argo-prefix@kubernetescrd

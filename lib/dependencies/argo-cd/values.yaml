@@ -8,17 +8,17 @@ controller:
 server:
   logLevel: warn
   insecure: true
-  extraArgs:
-    - --basehref
-    - /argocd
+  # extraArgs:
+  #   - --basehref
+  #   - /argocd
   ingress:
     enabled: true
-    path: /argocd
-    hostname: kubernetes.docker.internal
+    # path: /argocd
+    hostname: argocd.docker.internal
     tls: false
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: web
-      traefik.ingress.kubernetes.io/router.middlewares: argocd-argocd-prefix@kubernetescrd
+      # traefik.ingress.kubernetes.io/router.middlewares: argocd-argocd-prefix@kubernetescrd
   extraVolumes:             ## Mocking TLS configmap mount for ApplicationSets requirements
     - name: tls-certs
       configMap:
