@@ -38,7 +38,7 @@ That's it. Everything else happens all on its own
   - `grafana.docker.internal`
   - `alertmanager.docker.internal`
 
-- ArgoCD: http://argocd.docker.internal/argocd
+- ArgoCD: http://argocd.docker.internal/
 
   - User:     admin
   - Password: BLEEGASTAN123
