@@ -46,7 +46,10 @@ cluster-monitoring-only:
 cluster:
 	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
 	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
-	sleep 60
+	kubectl wait --for=condition=complete job/helm-install-traefik -n kube-system --timeout=600s
+	kubectl wait --for=condition=complete job/helm-install-traefik-crd -n kube-system --timeout=600s
+	kubectl wait --for=condition=available deployment -l "app.kubernetes.io/name=traefik" -n kube-system --timeout=600s
+	until kubectl get svc/traefik --namespace kube-system --output=jsonpath='{.status.loadBalancer}' | grep "ingress"; do : ; done
 	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
 
 crossplane-aws-sealed-secret:
