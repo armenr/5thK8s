@@ -144,7 +144,7 @@ remove-argocd:
 	kustomize build --load-restrictor LoadRestrictionsNone --enable-helm \
 		argocd-app-sets/cluster-resources/argocd-applicationset \
 		| kubectl -n argocd delete -f -;
-	kubectl delete namespace argocd
+	kubectl delete namespace argo sealed-secrets argocd crossplane-system
 
 sealed-secrets-namespace:
 	kubectl create namespace sealed-secrets
