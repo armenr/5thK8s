@@ -69,23 +69,23 @@ server:
     evaluation_interval: 10s
 
 extraScrapeConfigs: |
-   - job_name: 'dev kubernetes monitoring'
-     scheme: http
-     scrape_interval: 25s
-     scrape_timeout: 25s
-     metrics_path: /federate
-     honor_labels: true
-     params:
-       match[]:
-         - '{__name__=~".+"}'
-     static_configs:
-       - targets: ['monitoring-stack-server.prometheus.svc:80']
-         labels:
-           instance: localhost
-           provider: k3s
-           region: am
-           cluster_name: local-cluster
-           environment: dev
+  - job_name: 'dev kubernetes monitoring'
+    scheme: http
+    scrape_interval: 25s
+    scrape_timeout: 25s
+    metrics_path: /federate
+    honor_labels: true
+    params:
+      match[]:
+        - '{__name__=~".+"}'
+    static_configs:
+      - targets: ['monitoring-stack-server.prometheus.svc:80']
+        labels:
+          instance: localhost
+          provider: k3s
+          region: am
+          cluster_name: local-cluster
+          environment: dev
 
 # deploys server, alertmanager, node-exporter, pushgateway
 # on this namespace
