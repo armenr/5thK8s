@@ -17,5 +17,5 @@ service:
   portName: service
 
 plugins:
-   - bessler-pictureit-panel
-   - grafana-polystat-panel
+  - bessler-pictureit-panel
+  - grafana-polystat-panel
