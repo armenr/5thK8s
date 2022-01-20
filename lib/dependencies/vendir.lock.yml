@@ -11,7 +11,7 @@ directories:
 - contents:
   - helmChart:
       appVersion: 2.2.3
-      version: 2.1.2
+      version: 3.0.0
     path: helm-chart
   - git:
       commitTitle: 'docs: update roadmap document with v2.2 release changes (#8089)...'
