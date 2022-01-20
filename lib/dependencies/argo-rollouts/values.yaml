@@ -2,7 +2,9 @@
 clusterInstall: true
 installCRDs: true
 keepCRDs: true
-
+server:
+  metrics:
+    enabled: true
 dashboard:
   enabled: true
   component: rollouts-dashboard
