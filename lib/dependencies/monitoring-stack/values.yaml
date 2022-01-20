@@ -135,7 +135,7 @@ filebeat:
 # ====================== Promtail ============================
 
 promtail:
-  enabled: true
+  enabled: false
   namespace:
     name: promtail
   daemonset:
