@@ -1,6 +1,54 @@
 # ====================== Prometheus stack ============================
 alertmanager:
-  enabled: false
+  enabled: true
+  image:
+    repository: quay.io/prometheus/alertmanager
+    tag: v0.21.0
+    pullPolicy: IfNotPresent
+  persistentVolume:
+    enabled: true
+    size: 500Mi
+  service:
+    port: 80
+    targetPort: 9093
+    nodePort: 30093
+    type: NodePort
+alertmanagerFiles:
+  alertmanager.yml:
+    global:
+    route:
+      group_by: ['instance' , 'alertname']
+      group_wait: 10s
+      group_interval: 30s
+      repeat_interval: 30m
+      receiver: Stelthlab
+      routes:
+        - match_re:
+            environment: .*
+          routes:
+            - match:
+                owner: devops
+              receiver: Stelthlab
+    receivers:
+      - name: Stelthlab
+        slack_configs:
+          - send_resolved: true
+            api_url: https://hooks.slack.com/services/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
+            channel: 'alerts'
+            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] Alert From Prometheus Alertmanager'
+            text: >-
+              {{ range .Alerts }}
+
+              *Alert:* {{ .Labels.instance }} - *`{{ .Labels.severity }}`*
+
+              *AlertName:* {{ .Labels.alertname }}
+
+              *Summary:* {{ .Annotations.summary }}
+
+              *Description:* {{ .Annotations.description }}
+              {{ end }}
+
+
 
 pushgateway:
   enabled: false
@@ -67,6 +115,82 @@ server:
     scrape_interval: 10s
     scrape_timeout: 10s
     evaluation_interval: 10s
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets:
+            - "monitoring-stack-alertmanager.prometheus.svc"
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: 'Kubernetes Has New Pod'
+        rules:
+          - alert: 'K8s Has New Pod'
+            expr: >
+              count by (provider,cluster_name,region,environment,namespace,label_app,pod)
+                (sum by (provider,cluster_name,region,environment,namespace,label_app,pod)
+                  (avg_over_time(kube_pod_labels{label_app=~".+"}[2m])) * 0 + on (pod,namespace) group_left
+                  sum by (pod,namespace)
+                  (time() - max_over_time(kube_pod_created[2m])) > 200 < 300) > 0
+            for: 10s
+            labels:
+              owner: devops
+              severity: informational
+            annotations:
+              summary: '{{ $labels.provider }}/{{ $labels.region }}: {{ $labels.cluster_name }}, Env: {{ $labels.environment }}, Pod: {{ $labels.pod }}'
+              description: 'Kubernetes created {{ $value }} new "{{ $labels.label_app }}" pods'
+              troubleshooting: "No actions need"
+      - name: 'Kubernetes Node Status'
+        rules:
+          - alert: 'K8s Node Status'
+            expr: >
+              sum by (provider,cluster_name,region,environment,instance)
+                          (label_replace
+                            (avg_over_time(kube_node_status_condition{condition="Ready",status="false"}[1m]),
+                            "instance", "$0", "node", ".*"
+                          )
+                        ) == 1
+            for: 30s
+            labels:
+              owner: devops
+              severity: critical
+            annotations:
+              value: '{{ $labels.phase }}'
+              summary: '{{ $labels.provider }}/{{ $labels.region }}: {{ $labels.cluster_name }}, Env: {{ $labels.environment }}, Condition: NotReady'
+              description: "Kubernetes node: {{ $labels.instance }} is not Ready"
+              troubleshooting: "Inform Higher Level OPS"
+      - name: 'Kubernetes Pod Status'
+        rules:
+          - alert: 'Pod Status'
+            expr: >
+              sum by (provider,cluster_name,region,environment,phase,pod,namespace)
+                (avg_over_time(kube_pod_status_phase{phase!~"Running|Succeeded"}[1m])) == 1
+            for: 1m
+            labels:
+              severity: critical
+              owner: devops
+              customer: '{{ $labels.provider }}:{{ $labels.region }}:{{ $labels.cluster_name }}:{{ $labels.environment }}:{{ $labels.pod }}'
+            annotations:
+              value: '{{ $labels.phase }}'
+              summary: '{{ $labels.provider }}/{{ $labels.region }}: {{ $labels.cluster_name }}, Env: {{ $labels.environment }}, NS: {{ $labels.namespace }}'
+              description: "Kubernetes pod: {{ $labels.pod }} of namespace: {{ $labels.namespace }} is in {{ $labels.phase }} state"
+              troubleshooting: "Before call or @mention please check:\n*kubectl -n {{ $labels.namespace }} get po -o wide|grep -v Running*\nIf there are some pods that can't run inform appropriate person."
+      - name: 'Kubernetes Deployment Status'
+        rules:
+          - alert: 'Deployment Replicas Unavailable'
+            expr: >
+              sum by (provider,cluster_name,region,environment,deployment,namespace)
+                (avg_over_time(kube_deployment_status_replicas_unavailable[2m])) >= 1
+            for: 2m
+            labels:
+              severity: critical
+              owner: devops
+              customer: '{{ $labels.provider }}:{{ $labels.region }}:{{ $labels.cluster_name }}:{{ $labels.environment }}:{{ $labels.deployment }}'
+            annotations:
+              value: '{{ $value | printf "%.0f" }}'
+              summary: "{{ $labels.provider }}/{{ $labels.region }}: {{ $labels.cluster_name }}, Env: {{ $labels.environment }}, NS: {{ $labels.namespace }}"
+              description: '{{ $value | printf "%.0f" }} replicas of deployment {{ $labels.deployment }} are unavailable'
+              troubleshooting: 'Inform Higher Level OPS'
 
 extraScrapeConfigs: |
    - job_name: 'dev kubernetes monitoring'
