@@ -44,7 +44,8 @@ cluster-monitoring-only:
 	$(MAKE) install-monitoring-stack
 
 cluster:
-	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
+	k3d cluster create local-$(shell whoami) --registry-create local-$(shell whoami)-registry --config ./lib/assets/k3d_local.yaml --wait;
+#	k3d cluster create local-$(shell whoami) --config ./lib/assets/k3d_local.yaml --wait;
 	kubectl wait --for=condition=available --timeout=600s --all deployments --all-namespaces;
 	kubectl wait --for=condition=complete job/helm-install-traefik -n kube-system --timeout=600s
 	kubectl wait --for=condition=complete job/helm-install-traefik-crd -n kube-system --timeout=600s
@@ -56,7 +57,7 @@ crossplane-aws-sealed-secret:
 	echo "[default]\naws_access_key_id = $$(aws configure --profile 5k-dev get aws_access_key_id)\naws_secret_access_key = $$(aws configure --profile 5k-dev get aws_secret_access_key)" \
 	| \
 	kubectl create secret generic aws-credentials \
-		--from-file=aws-credentials=/dev/stdin\
+		--from-file=aws-credentials=/dev/stdin \
 		--output json \
 		--dry-run=client \
     | kubeseal \
@@ -149,6 +150,8 @@ remove-argocd:
 sealed-secrets-namespace:
 	kubectl create namespace sealed-secrets
 
+vendir-up:
+	cd lib/dependencies && vendir sync
 
 # kapp-deploy-%:
 

@@ -17,6 +17,7 @@
     "*.yaml.default": "yaml",
     "*.yaml.example": "yaml",
     "*.yaml.generated": "yaml",
+    "Tiltfile": "python",
     },
   "editor.rulers": [
     {
