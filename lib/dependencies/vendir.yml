@@ -21,6 +21,11 @@ directories:
     http:
       url: https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
 
+# EKS Crossplane Example
+- path: eks-crossplane-example
+  http:
+    url: https://github.com/aws-samples/eks-gitops-crossplane-argocd.git
+
 # Argo-CD Synced assets
 - path: argo-cd/synced/
   contents:
@@ -194,14 +199,14 @@ directories:
     newRootPath: examples
 
 # kubevela
-- path: kubevela/synced
-  contents:
-  - path: helm-chart
-    helmChart:
-      name: vela-core
-      version: 1.2.0-rc.2
-      repository:
-        url: https://charts.kubevela.net/core
+# - path: kubevela/synced
+#   contents:
+#   - path: helm-chart
+#     helmChart:
+#       name: vela-core
+#       version: 1.2.0-rc.2
+#       repository:
+#         url: https://charts.kubevela.net/core
 
 # traefik
 # - path: traefik/synced
@@ -222,13 +227,13 @@ directories:
 #           url: https://kubeshop.github.io/helm-charts
 
 # monitoring-stack
-- path: monitoring-stack/synced
-  contents:
-    - path: helm-chart
-      helmChart:
-        name: monitoring-stack
-        repository:
-          url: https://gitlab.com/api/v4/projects/32903346/packages/helm/stable
+# - path: monitoring-stack/synced
+#   contents:
+#     - path: helm-chart
+#       helmChart:
+#         name: monitoring-stack
+#         repository:
+#           url: https://gitlab.com/api/v4/projects/32903346/packages/helm/stable
 
 # # bitnami-prometheus
 # - path: kube-prometheus/synced
@@ -249,10 +254,10 @@ directories:
 #         url: https://charts.bitnami.com/bitnami
 
 # grafana
-- path: grafana/synced
-  contents:
-    - path: helm-chart
-      helmChart:
-        name: grafana
-        repository:
-          url: https://grafana.github.io/helm-charts
+# - path: grafana/synced
+#   contents:
+#     - path: helm-chart
+#       helmChart:
+#         name: grafana
+#         repository:
+#           url: https://grafana.github.io/helm-charts

@@ -22,6 +22,7 @@ spec:
   source:
     path: lib/bootstrap/apps
     repoURL: https://github.com/armenr/5thK8s.git
+    targetRevision: armenr/crossplane-pt-1
   syncPolicy:
     automated:
       allowEmpty: true

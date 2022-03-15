@@ -1,6 +1,6 @@
 annotations:
   artifacthub.io/changes: |
-    - "[Fixed]: Dashboard ingress service name"
+    - "[Added]: Ability to define dashboard service node port"
 apiVersion: v2
 appVersion: v1.1.1
 description: A Helm chart for Argo Rollouts
@@ -11,4 +11,4 @@ maintainers:
 - name: dthomson25
 - name: jessesuen
 name: argo-rollouts
-version: 2.9.1
+version: 2.10.0

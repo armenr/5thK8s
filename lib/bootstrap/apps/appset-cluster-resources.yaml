@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: '0'
+    argocd.argoproj.io/sync-wave: '1'
   creationTimestamp: null
   name: root-cluster-resources
   namespace: argocd
@@ -43,6 +43,7 @@ spec:
       source:
         path: argocd-app-sets/cluster-resources/{{name}}
         repoURL: https://github.com/armenr/5thK8s.git
+        targetRevision: armenr/crossplane-pt-1
       syncPolicy:
         automated:
           allowEmpty: true

@@ -8,6 +8,8 @@
 - kubectl
 - kubeseal
 - helm (v3)
+- vendir
+- kubectl-slice
 
 ## Quick Start
 

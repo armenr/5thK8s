@@ -1,8 +1,8 @@
 annotations:
   artifacthub.io/changes: |
-    - "[Changed]: Update to Argo Events v1.5.6"
+    - "[Added]: Add aggregate-roles (sync with upstream manifests)"
 apiVersion: v2
-appVersion: v1.5.6
+appVersion: v1.6.0
 description: A Helm chart to install Argo-Events in k8s Cluster
 home: https://github.com/argoproj/argo-helm
 icon: https://argoproj.github.io/argo-events/assets/logo.png
@@ -17,4 +17,4 @@ maintainers:
 name: argo-events
 sources:
 - https://github.com/argoproj/argo-events
-version: 1.10.1
+version: 1.12.0

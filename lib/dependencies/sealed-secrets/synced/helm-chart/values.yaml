@@ -29,7 +29,7 @@ extraDeploy: []
 image:
   registry: quay.io
   repository: bitnami/sealed-secrets-controller
-  tag: v0.17.2
+  tag: v0.17.3
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -49,6 +49,20 @@ createController: true
 ## @param secretName The name of an existing TLS secret containing the key used to encrypt secrets
 ##
 secretName: "sealed-secrets-key"
+## @param updateStatus Specifies whether the Sealed Secrets controller should update the status subresource
+##
+updateStatus: true
+## @param keyrenewperiod Specifies key renewal period. Default 30 days
+## e.g
+## keyrenewperiod: "720h30m"
+##
+keyrenewperiod: ""
+## @param command Override default container command
+##
+command: []
+## @param args Override default container args
+##
+args: []
 ## Sealed Secret resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ## @param resources.limits [object] The resources limits for the Sealed Secret containers
@@ -100,10 +114,6 @@ nodeSelector: {}
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
 tolerations: []
-
-## @param updateStatus Specifies whether the Sealed Secrets controller should update the status subresource
-##
-updateStatus: true
 
 ## @section Traffic Exposure Parameters
 

@@ -1,8 +1,9 @@
-apiVersion: k3d.io/v1alpha3
+apiVersion: k3d.io/v1alpha4
 kind: Simple
 # servers: 3
 # agents: 3
-image: rancher/k3s:v1.21.7-k3s1
+image: rancher/k3s:v1.21.8-k3s1
+# image: rancher/k3s:v1.21.10-engine0+k3s1
 kubeAPI:
   host: "kubernetes.docker.internal"
   hostIP: "127.0.0.1"

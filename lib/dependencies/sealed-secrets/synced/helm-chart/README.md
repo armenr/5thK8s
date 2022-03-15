@@ -2,6 +2,28 @@
 
 Sealed Secrets are "one-way" encrypted K8s Secrets that can be created by anyone, but can only be decrypted by the controller running in the target cluster recovering the original object.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [TL;DR](#tldr)
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Installing the Chart](#installing-the-chart)
+- [Uninstalling the Chart](#uninstalling-the-chart)
+- [Parameters](#parameters)
+  - [Common parameters](#common-parameters)
+  - [Sealed Secrets Parameters](#sealed-secrets-parameters)
+  - [Traffic Exposure Parameters](#traffic-exposure-parameters)
+  - [Other Parameters](#other-parameters)
+  - [Metrics parameters](#metrics-parameters)
+- [Using kubeseal](#using-kubeseal)
+- [Configuration and installation details](#configuration-and-installation-details)
+- [Troubleshooting](#troubleshooting)
+- [Upgrading](#upgrading)
+  - [To 2.0.0](#to-200)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## TL;DR
 
 ```console
@@ -63,11 +85,15 @@ The command removes all the Kubernetes components associated with the chart and 
 | ------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------- |
 | `image.registry`                                  | Sealed Secrets image registry                                                        | `quay.io`                           |
 | `image.repository`                                | Sealed Secrets image repository                                                      | `bitnami/sealed-secrets-controller` |
-| `image.tag`                                       | Sealed Secrets image tag (immutable tags are recommended)                            | `v0.17.2`                           |
+| `image.tag`                                       | Sealed Secrets image tag (immutable tags are recommended)                            | `v0.17.3`                           |
 | `image.pullPolicy`                                | Sealed Secrets image pull policy                                                     | `IfNotPresent`                      |
 | `image.pullSecrets`                               | Sealed Secrets image pull secrets                                                    | `[]`                                |
 | `createController`                                | Specifies whether the Sealed Secrets controller should be created                    | `true`                              |
 | `secretName`                                      | The name of an existing TLS secret containing the key used to encrypt secrets        | `sealed-secrets-key`                |
+| `updateStatus`                                    | Specifies whether the Sealed Secrets controller should update the status subresource | `true`                              |
+| `keyrenewperiod`                                  | Specifies key renewal period. Default 30 days                                        | `""`                                |
+| `command`                                         | Override default container command                                                   | `[]`                                |
+| `args`                                            | Override default container args                                                      | `[]`                                |
 | `resources.limits`                                | The resources limits for the Sealed Secret containers                                | `{}`                                |
 | `resources.requests`                              | The requested resources for the Sealed Secret containers                             | `{}`                                |
 | `podSecurityContext.enabled`                      | Enabled Sealed Secret pods' Security Context                                         | `true`                              |
@@ -82,7 +108,6 @@ The command removes all the Kubernetes components associated with the chart and 
 | `affinity`                                        | Affinity for Sealed Secret pods assignment                                           | `{}`                                |
 | `nodeSelector`                                    | Node labels for Sealed Secret pods assignment                                        | `{}`                                |
 | `tolerations`                                     | Tolerations for Sealed Secret pods assignment                                        | `[]`                                |
-| `updateStatus`                                    | Specifies whether the Sealed Secrets controller should update the status subresource | `true`                              |
 
 
 ### Traffic Exposure Parameters
@@ -98,7 +123,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `ingress.apiVersion`       | Force Ingress API version (automatically detected if not set)                                                                    | `""`                     |
 | `ingress.ingressClassName` | IngressClass that will be be used to implement the Ingress                                                                       | `""`                     |
 | `ingress.hostname`         | Default host for the ingress record                                                                                              | `sealed-secrets.local`   |
-| `ingress.path`             | Default path for the ingress record                                                                                              | `ImplementationSpecific` |
+| `ingress.path`             | Default path for the ingress record                                                                                              | `/v1/cert.pem`           |
 | `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`                     |
 | `ingress.tls`              | Enable TLS configuration for the host defined at `ingress.hostname` parameter                                                    | `false`                  |
 | `ingress.selfSigned`       | Create a TLS secret for this ingress record using self-signed certificates generated by Helm                                     | `false`                  |
@@ -111,31 +136,31 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ### Other Parameters
 
-| Name                    | Description                                          | Value       |
-| ----------------------- | ---------------------------------------------------- | ----------- |
-| `serviceAccount.create` | Specifies whether a ServiceAccount should be created | `true`      |
-| `serviceAccount.labels` | Extra labels to be added to the ServiceAccount       | `undefined` |
-| `serviceAccount.name`   | The name of the ServiceAccount to use.               | `""`        |
-| `rbac.create`           | Specifies whether RBAC resources should be created   | `true`      |
-| `rbac.labels`           | Extra labels to be added to RBAC resources           | `undefined` |
-| `rbac.pspEnabled`       | PodSecurityPolicy                                    | `false`     |
+| Name                    | Description                                          | Value   |
+| ----------------------- | ---------------------------------------------------- | ------- |
+| `serviceAccount.create` | Specifies whether a ServiceAccount should be created | `true`  |
+| `serviceAccount.labels` | Extra labels to be added to the ServiceAccount       | `{}`    |
+| `serviceAccount.name`   | The name of the ServiceAccount to use.               | `""`    |
+| `rbac.create`           | Specifies whether RBAC resources should be created   | `true`  |
+| `rbac.labels`           | Extra labels to be added to RBAC resources           | `{}`    |
+| `rbac.pspEnabled`       | PodSecurityPolicy                                    | `false` |
 
 
 ### Metrics parameters
 
-| Name                                       | Description                                                                            | Value       |
-| ------------------------------------------ | -------------------------------------------------------------------------------------- | ----------- |
-| `metrics.serviceMonitor.enabled`           | Specify if a ServiceMonitor will be deployed for Prometheus Operator                   | `false`     |
-| `metrics.serviceMonitor.namespace`         | Namespace where Prometheus Operator is running in                                      | `""`        |
-| `metrics.serviceMonitor.labels`            | Extra labels for the ServiceMonitor                                                    | `undefined` |
-| `metrics.serviceMonitor.annotations`       | Extra annotations for the ServiceMonitor                                               | `undefined` |
-| `metrics.serviceMonitor.interval`          | How frequently to scrape metrics                                                       | `""`        |
-| `metrics.serviceMonitor.scrapeTimeout`     | Timeout after which the scrape is ended                                                | `""`        |
-| `metrics.serviceMonitor.metricRelabelings` | Specify additional relabeling of metrics                                               | `[]`        |
-| `metrics.serviceMonitor.relabelings`       | Specify general relabeling                                                             | `[]`        |
-| `metrics.dashboards.create`                | Specifies whether a ConfigMap with a Grafana dashboard configuration should be created | `false`     |
-| `metrics.dashboards.labels`                | Extra labels to be added to the Grafana dashboard ConfigMap                            | `undefined` |
-| `metrics.dashboards.namespace`             | Namespace where Grafana dashboard ConfigMap is deployed                                | `""`        |
+| Name                                       | Description                                                                            | Value   |
+| ------------------------------------------ | -------------------------------------------------------------------------------------- | ------- |
+| `metrics.serviceMonitor.enabled`           | Specify if a ServiceMonitor will be deployed for Prometheus Operator                   | `false` |
+| `metrics.serviceMonitor.namespace`         | Namespace where Prometheus Operator is running in                                      | `""`    |
+| `metrics.serviceMonitor.labels`            | Extra labels for the ServiceMonitor                                                    | `{}`    |
+| `metrics.serviceMonitor.annotations`       | Extra annotations for the ServiceMonitor                                               | `{}`    |
+| `metrics.serviceMonitor.interval`          | How frequently to scrape metrics                                                       | `""`    |
+| `metrics.serviceMonitor.scrapeTimeout`     | Timeout after which the scrape is ended                                                | `""`    |
+| `metrics.serviceMonitor.metricRelabelings` | Specify additional relabeling of metrics                                               | `[]`    |
+| `metrics.serviceMonitor.relabelings`       | Specify general relabeling                                                             | `[]`    |
+| `metrics.dashboards.create`                | Specifies whether a ConfigMap with a Grafana dashboard configuration should be created | `false` |
+| `metrics.dashboards.labels`                | Extra labels to be added to the Grafana dashboard ConfigMap                            | `{}`    |
+| `metrics.dashboards.namespace`             | Namespace where Grafana dashboard ConfigMap is deployed                                | `""`    |
 
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
@@ -174,12 +199,14 @@ Read about kubeseal usage on [sealed-secrets docs](https://github.com/bitnami-la
 - In the case that **serviceAccount.create** is `false` and **rbac.create** is `true` it is expected for a ServiceAccount with the name **serviceAccount.name** to exist _in the same namespace as this chart_ before the installation.
 - If **serviceAccount.create** is `true` there cannot be an existing service account with the name **serviceAccount.name**.
 - If a secret with name **secretName** does not exist _in the same namespace as this chart_, then on install one will be created. If a secret already exists with this name the keys inside will be used.
-- OpenShift: unset the runAsUser and fsGroup like this:
+- OpenShift: unset the runAsUser and fsGroup like this when installing in a custom namespace:
 
 ```yaml
-securityContext:
-  runAsUser:
+podSecurityContext:
   fsGroup:
+
+containerSecurityContext:
+  runAsUser:
 ```
 
 ## Troubleshooting
@@ -195,6 +222,7 @@ A major refactoring of the chart has been performed to adopt several common prac
 - `controller.create` renamed as `createController`.
 - `securityContext.*` parameters are deprecated in favor of `podSecurityContext.*`, and `containerSecurityContext.*` ones.
 - `image.repository` changed to `image.registry`/`image.repository`.
+- `ingress.hosts[0]` changed to `ingress.hostname`.
 
 Consult the [Parameters](#parameters) section to obtain more info about the available parameters.
 
